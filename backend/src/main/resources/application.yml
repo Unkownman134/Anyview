@@ -1,0 +1,34 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: anyview-backend
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/anyview?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: root
+    password: ^T.GKiPl({xfLt0M6w6Pj+FL[(E]Pzu&s-3ScHI]Xb1WleLX_D
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+jwt:
+  secret: anyview-secret-key-2024-programming-training-platform
+  expiration: 86400000
+
+logging:
+  level:
+    com.anyview: debug
+    org.springframework.security: debug
