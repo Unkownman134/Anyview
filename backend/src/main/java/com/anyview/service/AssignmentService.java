@@ -17,6 +17,10 @@ public class AssignmentService {
     private final AssignmentRepository assignmentRepository;
     private final QuestionRepository questionRepository;
 
+    public List<Assignment> getAssignments() {
+        return assignmentRepository.findAll();
+    }
+
     public Assignment createAssignment(Assignment assignment) {
         return assignmentRepository.save(assignment);
     }

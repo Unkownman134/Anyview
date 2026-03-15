@@ -6,6 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "assignments")
@@ -40,6 +41,9 @@ public class Assignment {
 
     @Column(nullable = false)
     private Boolean published = false;
+
+    @OneToMany(mappedBy = "assignment", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<AssignmentQuestion> assignmentQuestions;
 
     @CreationTimestamp
     @Column(name = "created_at")

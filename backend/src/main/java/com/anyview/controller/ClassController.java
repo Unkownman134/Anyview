@@ -10,10 +10,20 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/classes")
+@RequestMapping("/classes")
 @RequiredArgsConstructor
 public class ClassController {
     private final ClassService classService;
+
+    @GetMapping
+    public ApiResponse<List<ClassInfo>> getClasses() {
+        try {
+            List<ClassInfo> classes = classService.getClasses();
+            return ApiResponse.success(classes);
+        } catch (Exception e) {
+            return ApiResponse.error("获取班级列表失败：" + e.getMessage());
+        }
+    }
 
     @PostMapping
     public ApiResponse<ClassInfo> createClass(@RequestBody ClassInfo classInfo) {

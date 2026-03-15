@@ -13,15 +13,15 @@
           <el-icon><HomeFilled /></el-icon>
           <span>首页</span>
         </el-menu-item>
-        <el-menu-item index="/classes">
+        <el-menu-item v-if="isTeacher || isAdmin" index="/classes">
           <el-icon><School /></el-icon>
           <span>班级管理</span>
         </el-menu-item>
-        <el-menu-item index="/questions">
+        <el-menu-item v-if="isTeacher || isAdmin" index="/questions">
           <el-icon><Document /></el-icon>
           <span>题库管理</span>
         </el-menu-item>
-        <el-menu-item index="/assignments">
+        <el-menu-item v-if="isTeacher || isAdmin" index="/assignments">
           <el-icon><Edit /></el-icon>
           <span>作业管理</span>
         </el-menu-item>
@@ -70,6 +70,7 @@ const userStore = useUserStore()
 
 const activeMenu = computed(() => route.path)
 const isAdmin = computed(() => userStore.user?.role === 'ADMIN')
+const isTeacher = computed(() => userStore.user?.role === 'TEACHER')
 
 const handleCommand = (command) => {
   if (command === 'logout') {

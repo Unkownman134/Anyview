@@ -9,10 +9,20 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/submissions")
+@RequestMapping("/submissions")
 @RequiredArgsConstructor
 public class SubmissionController {
     private final SubmissionService submissionService;
+
+    @GetMapping
+    public ApiResponse<List<Submission>> getSubmissions() {
+        try {
+            List<Submission> submissions = submissionService.getSubmissions();
+            return ApiResponse.success(submissions);
+        } catch (Exception e) {
+            return ApiResponse.error("获取提交列表失败：" + e.getMessage());
+        }
+    }
 
     @PostMapping
     public ApiResponse<Submission> createSubmission(@RequestBody Submission submission) {

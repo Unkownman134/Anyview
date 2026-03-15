@@ -29,7 +29,7 @@ public class AuthService {
         );
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String token = tokenProvider.generateToken(authentication);
+        String token = tokenProvider.generateToken(authentication.getName());
 
         User user = userRepository.findByUsername(request.getUsername()).orElseThrow();
 

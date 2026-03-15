@@ -131,46 +131,46 @@ npm run dev
 ## API 接口
 
 ### 认证接口
-- POST /api/auth/login - 用户登录
-- POST /api/auth/register - 用户注册
-- GET /api/auth/me - 获取当前用户信息
+- POST /auth/login - 用户登录
+- POST /auth/register - 用户注册
+- GET /auth/me - 获取当前用户信息
 
 ### 班级接口
-- GET /api/classes - 获取班级列表
-- POST /api/classes - 创建班级
-- PUT /api/classes/{id} - 更新班级
-- DELETE /api/classes/{id} - 删除班级
-- POST /api/classes/{classId}/students/{studentId} - 添加学生到班级
-- DELETE /api/classes/{classId}/students/{studentId} - 从班级移除学生
+- GET /classes - 获取班级列表
+- POST /classes - 创建班级
+- PUT /classes/{id} - 更新班级
+- DELETE /classes/{id} - 删除班级
+- POST /classes/{classId}/students/{studentId} - 添加学生到班级
+- DELETE /classes/{classId}/students/{studentId} - 从班级移除学生
 
 ### 题目接口
-- GET /api/questions - 获取题目列表
-- GET /api/questions/public - 获取公共题目
-- POST /api/questions - 创建题目
-- PUT /api/questions/{id} - 更新题目
-- DELETE /api/questions/{id} - 删除题目
+- GET /questions - 获取题目列表
+- GET /questions/public - 获取公共题目
+- POST /questions - 创建题目
+- PUT /questions/{id} - 更新题目
+- DELETE /questions/{id} - 删除题目
 
 ### 作业接口
-- GET /api/assignments - 获取作业列表
-- POST /api/assignments - 创建作业
-- PUT /api/assignments/{id} - 更新作业
-- DELETE /api/assignments/{id} - 删除作业
-- POST /api/assignments/{id}/publish - 发布作业
+- GET /assignments - 获取作业列表
+- POST /assignments - 创建作业
+- PUT /assignments/{id} - 更新作业
+- DELETE /assignments/{id} - 删除作业
+- POST /assignments/{id}/publish - 发布作业
 
 ### 提交接口
-- GET /api/submissions - 获取提交列表
-- POST /api/submissions - 创建提交
-- POST /api/submissions/{id}/grade - 批改作业
+- GET /submissions - 获取提交列表
+- POST /submissions - 创建提交
+- POST /submissions/{id}/grade - 批改作业
 
 ### AI 接口
-- POST /api/ai/analyze - 代码分析
-- POST /api/ai/grade - AI 批改
-- POST /api/ai/feedback - 生成反馈
+- POST /ai/analyze - 代码分析
+- POST /ai/grade - AI 批改
+- POST /ai/feedback - 生成反馈
 
 ## 默认账号
 
-系统初始化后，可以通过注册功能创建账号：
-- 管理员账号需要手动在数据库中创建
+系统初始化后，会自动创建管理员账号：
+- 管理员：admin/123456 (邮箱：1@qq.com)
 - 教师和学生账号可以通过注册功能创建
 
 ## AI 配置

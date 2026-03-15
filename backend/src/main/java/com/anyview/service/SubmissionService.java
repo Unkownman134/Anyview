@@ -12,6 +12,10 @@ import java.util.List;
 public class SubmissionService {
     private final SubmissionRepository submissionRepository;
 
+    public List<Submission> getSubmissions() {
+        return submissionRepository.findAll();
+    }
+
     public Submission createSubmission(Submission submission) {
         return submissionRepository.save(submission);
     }

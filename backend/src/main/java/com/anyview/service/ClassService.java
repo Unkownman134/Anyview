@@ -17,6 +17,10 @@ public class ClassService {
     private final ClassRepository classRepository;
     private final ClassStudentRepository classStudentRepository;
 
+    public List<ClassInfo> getClasses() {
+        return classRepository.findAll();
+    }
+
     public ClassInfo createClass(ClassInfo classInfo) {
         return classRepository.save(classInfo);
     }

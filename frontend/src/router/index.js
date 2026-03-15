@@ -22,21 +22,7 @@ const routes = [
         name: 'Dashboard',
         component: () => import('@/views/Dashboard.vue')
       },
-      {
-        path: 'classes',
-        name: 'Classes',
-        component: () => import('@/views/Classes.vue')
-      },
-      {
-        path: 'questions',
-        name: 'Questions',
-        component: () => import('@/views/Questions.vue')
-      },
-      {
-        path: 'assignments',
-        name: 'Assignments',
-        component: () => import('@/views/Assignments.vue')
-      },
+      {        path: 'classes',        name: 'Classes',        component: () => import('@/views/Classes.vue'),        meta: { requiresTeacher: true }      },      {        path: 'questions',        name: 'Questions',        component: () => import('@/views/Questions.vue'),        meta: { requiresTeacher: true }      },      {        path: 'assignments',        name: 'Assignments',        component: () => import('@/views/Assignments.vue'),        meta: { requiresTeacher: true }      },
       {
         path: 'submissions',
         name: 'Submissions',
@@ -66,6 +52,8 @@ router.beforeEach((to, from, next) => {
   } else {
     if (token) {
       if (to.meta.requiresAdmin && userStore.user?.role !== 'ADMIN') {
+        next('/dashboard')
+      } else if (to.meta.requiresTeacher && userStore.user?.role !== 'TEACHER' && userStore.user?.role !== 'ADMIN') {
         next('/dashboard')
       } else {
         next()

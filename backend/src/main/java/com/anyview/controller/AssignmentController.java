@@ -10,10 +10,20 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/assignments")
+@RequestMapping("/assignments")
 @RequiredArgsConstructor
 public class AssignmentController {
     private final AssignmentService assignmentService;
+
+    @GetMapping
+    public ApiResponse<List<Assignment>> getAssignments() {
+        try {
+            List<Assignment> assignments = assignmentService.getAssignments();
+            return ApiResponse.success(assignments);
+        } catch (Exception e) {
+            return ApiResponse.error("获取作业列表失败：" + e.getMessage());
+        }
+    }
 
     @PostMapping
     public ApiResponse<Assignment> createAssignment(@RequestBody Assignment assignment) {
@@ -48,7 +58,7 @@ public class AssignmentController {
     @GetMapping("/class/{classId}")
     public ApiResponse<List<Assignment>> getAssignmentsByClass(@PathVariable Long classId) {
         try {
-            List<Assignment> assignments = assignmentService.getAssignmentsByClass(classId);
+            List<Assignment> assignments = assignmentService.getAssignmentsByClassId(classId);
             return ApiResponse.success(assignments);
         } catch (Exception e) {
             return ApiResponse.error("获取作业列表失败：" + e.getMessage());
