@@ -12,7 +12,7 @@ import java.util.List;
 public class UserService {
     private final UserRepository userRepository;
 
-    public List<User> getUsers() {
+    public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
@@ -20,17 +20,26 @@ public class UserService {
         return userRepository.findById(id).orElse(null);
     }
 
-    public User updateUser(User user) {
-        return userRepository.save(user);
+    public User updateUser(Long id, User user) {
+        User existingUser = userRepository.findById(id).orElseThrow();
+        existingUser.setRealName(user.getRealName());
+        existingUser.setEmail(user.getEmail());
+        existingUser.setRole(user.getRole());
+        existingUser.setEnabled(user.getEnabled());
+        return userRepository.save(existingUser);
     }
 
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
 
-    public User enableUser(Long id, boolean enabled) {
+    public void enableUser(Long id, boolean enabled) {
         User user = userRepository.findById(id).orElseThrow();
         user.setEnabled(enabled);
-        return userRepository.save(user);
+        userRepository.save(user);
+    }
+
+    public List<User> getUsers() {
+        return getAllUsers();
     }
 }

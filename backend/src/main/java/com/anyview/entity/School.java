@@ -9,31 +9,20 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "users")
+@Table(name = "schools")
 @Data
-public class User {
+public class School {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
-    private String username;
+    @Column(nullable = false, unique = true)
+    private String name;
 
-    @Column(nullable = false)
-    private String password;
+    @Column(nullable = false, unique = true)
+    private String code;
 
-    @Column(nullable = false)
-    private String email;
-
-    private String realName;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private UserRole role;
-
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "school_id")
-    private School school;
+    private String description;
 
     @Column(nullable = false)
     private Boolean enabled = true;
@@ -47,11 +36,4 @@ public class User {
     @Column(name = "updated_at")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updatedAt;
-
-    public User() {
-    }
-
-    public User(Long id) {
-        this.id = id;
-    }
 }

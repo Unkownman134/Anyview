@@ -28,6 +28,16 @@
             <el-option label="教师" value="TEACHER" />
           </el-select>
         </el-form-item>
+        <el-form-item label="学校" prop="schoolId">
+          <el-select v-model="registerForm.schoolId" placeholder="请选择学校" style="width: 100%" :loading="schoolLoading">
+            <el-option 
+              v-for="school in schools" 
+              :key="school.id" 
+              :label="school.name" 
+              :value="school.id" 
+            />
+          </el-select>
+        </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleRegister" style="width: 100%">注册</el-button>
         </el-form-item>
@@ -40,13 +50,16 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { register } from '@/api/auth'
+import { getEnabledSchools } from '@/api/school'
 
 const router = useRouter()
 const registerFormRef = ref()
+const schools = ref([])
+const schoolLoading = ref(false)
 
 const registerForm = reactive({
   username: '',
@@ -54,7 +67,8 @@ const registerForm = reactive({
   confirmPassword: '',
   email: '',
   realName: '',
-  role: 'STUDENT'
+  role: 'STUDENT',
+  schoolId: null
 })
 
 const validateConfirmPassword = (rule, value, callback) => {
@@ -83,7 +97,20 @@ const rules = {
     { type: 'email', message: '请输入正确的邮箱格式', trigger: 'blur' }
   ],
   realName: [{ required: true, message: '请输入真实姓名', trigger: 'blur' }],
-  role: [{ required: true, message: '请选择角色', trigger: 'change' }]
+  role: [{ required: true, message: '请选择角色', trigger: 'change' }],
+  schoolId: [{ required: true, message: '请选择学校', trigger: 'change' }]
+}
+
+const loadSchools = async () => {
+  try {
+    schoolLoading.value = true
+    const res = await getEnabledSchools()
+    schools.value = res.data || []
+  } catch (error) {
+    ElMessage.error('加载学校列表失败')
+  } finally {
+    schoolLoading.value = false
+  }
 }
 
 const handleRegister = async () => {
@@ -99,6 +126,10 @@ const handleRegister = async () => {
     }
   })
 }
+
+onMounted(() => {
+  loadSchools()
+})
 </script>
 
 <style scoped>
