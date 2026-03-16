@@ -1,12 +1,14 @@
 package com.anyview.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "schools")
@@ -26,6 +28,10 @@ public class School {
 
     @Column(nullable = false)
     private Boolean enabled = true;
+
+    @OneToMany(mappedBy = "school", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<User> users;
 
     @CreationTimestamp
     @Column(name = "created_at")

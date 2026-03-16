@@ -42,4 +42,12 @@ public class UserService {
     public List<User> getUsers() {
         return getAllUsers();
     }
+
+    public List<User> getUsersByRole(String role) {
+        return userRepository.findByRole(role);
+    }
+
+    public List<User> getUsersByRoleAndSchool(String role, Long schoolId) {
+        return userRepository.findByRoleAndSchoolId(role, schoolId);
+    }
 }

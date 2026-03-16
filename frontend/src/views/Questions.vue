@@ -12,13 +12,6 @@
         <el-table-column prop="title" label="标题" />
         <el-table-column prop="type" label="类型" />
         <el-table-column prop="difficulty" label="难度" width="100" />
-        <el-table-column prop="isPublic" label="公开" width="80">
-          <template #default="{ row }">
-            <el-tag :type="row.isPublic ? 'success' : 'info'">
-              {{ row.isPublic ? '是' : '否' }}
-            </el-tag>
-          </template>
-        </el-table-column>
         <el-table-column label="操作" width="200">
           <template #default="{ row }">
             <el-button size="small" @click="handleEdit(row)">编辑</el-button>
@@ -46,9 +39,6 @@
         <el-form-item label="难度">
           <el-input-number v-model="questionForm.difficulty" :min="1" :max="5" />
         </el-form-item>
-        <el-form-item label="公开">
-          <el-switch v-model="questionForm.isPublic" />
-        </el-form-item>
       </el-form>
       <template #footer>
         <el-button @click="showCreateDialog = false">取消</el-button>
@@ -69,8 +59,7 @@ const questionForm = reactive({
   title: '',
   description: '',
   type: 'PROGRAMMING',
-  difficulty: 1,
-  isPublic: true
+  difficulty: 1
 })
 
 const loadQuestions = async () => {

@@ -37,6 +37,14 @@ export function addStudentToClass(classId, studentId) {
   })
 }
 
+export function addStudentsToClass(classId, studentIds) {
+  return request({
+    url: `/classes/${classId}/students/batch`,
+    method: 'post',
+    data: studentIds
+  })
+}
+
 export function removeStudentFromClass(classId, studentId) {
   return request({
     url: `/classes/${classId}/students/${studentId}`,

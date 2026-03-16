@@ -173,6 +173,9 @@ const handleLogin = async () => {
           username: loginForm.username,
           password: loginForm.password
         }
+        if (showSchoolSelect.value && loginForm.school) {
+          loginData.school = loginForm.school
+        }
         const res = await login(loginData)
         userStore.setToken(res.data.token)
         userStore.setUser(res.data)

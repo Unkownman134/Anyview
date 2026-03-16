@@ -34,6 +34,11 @@ spring:
     password: 
     database: 0
 
+ai:
+  api:
+    url: https://api.openai.com/v1/chat/completions
+    key: your-openai-api-key
+
 jwt:
   secret: anyview-secret-key-2024-programming-training-platform
   expiration: 86400000

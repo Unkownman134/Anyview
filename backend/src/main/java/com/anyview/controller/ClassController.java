@@ -1,13 +1,19 @@
 package com.anyview.controller;
 
 import com.anyview.dto.ApiResponse;
+import com.anyview.dto.ClassCreateRequest;
+import com.anyview.dto.ClassDTO;
 import com.anyview.entity.ClassInfo;
 import com.anyview.entity.ClassStudent;
+import com.anyview.entity.School;
+import com.anyview.entity.User;
 import com.anyview.service.ClassService;
+import com.anyview.util.ClassMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/classes")
@@ -16,51 +22,73 @@ public class ClassController {
     private final ClassService classService;
 
     @GetMapping
-    public ApiResponse<List<ClassInfo>> getClasses() {
+    public ApiResponse<List<ClassDTO>> getClasses() {
         try {
             List<ClassInfo> classes = classService.getClasses();
-            return ApiResponse.success(classes);
+            List<ClassDTO> classDTOs = classes.stream()
+                    .map(ClassMapper::toDTO)
+                    .collect(Collectors.toList());
+            return ApiResponse.success(classDTOs);
         } catch (Exception e) {
             return ApiResponse.error("获取班级列表失败：" + e.getMessage());
         }
     }
 
     @PostMapping
-    public ApiResponse<ClassInfo> createClass(@RequestBody ClassInfo classInfo) {
+    public ApiResponse<ClassDTO> createClass(@RequestBody ClassCreateRequest request) {
         try {
+            ClassInfo classInfo = new ClassInfo();
+            classInfo.setClassName(request.getClassName());
+            classInfo.setDescription(request.getDescription());
+            
+            if (request.getSchoolId() != null) {
+                School school = new School();
+                school.setId(request.getSchoolId());
+                classInfo.setSchool(school);
+            }
+            
+            if (request.getTeacherId() != null) {
+                User teacher = new User();
+                teacher.setId(request.getTeacherId());
+                classInfo.setTeacher(teacher);
+            }
+            
             ClassInfo created = classService.createClass(classInfo);
-            return ApiResponse.success("班级创建成功", created);
+            return ApiResponse.success("班级创建成功", ClassMapper.toDTO(created));
         } catch (Exception e) {
             return ApiResponse.error("创建班级失败：" + e.getMessage());
         }
     }
 
     @GetMapping("/{id}")
-    public ApiResponse<ClassInfo> getClassById(@PathVariable Long id) {
+    public ApiResponse<ClassDTO> getClassById(@PathVariable Long id) {
         try {
             ClassInfo classInfo = classService.getClassById(id);
-            return ApiResponse.success(classInfo);
+            return ApiResponse.success(ClassMapper.toDTO(classInfo));
         } catch (Exception e) {
             return ApiResponse.error("获取班级信息失败：" + e.getMessage());
         }
     }
 
     @GetMapping("/teacher/{teacherId}")
-    public ApiResponse<List<ClassInfo>> getClassesByTeacher(@PathVariable Long teacherId) {
+    public ApiResponse<List<ClassDTO>> getClassesByTeacher(@PathVariable Long teacherId) {
         try {
             List<ClassInfo> classes = classService.getClassesByTeacher(teacherId);
-            return ApiResponse.success(classes);
+            List<ClassDTO> classDTOs = classes.stream()
+                    .map(ClassMapper::toDTO)
+                    .collect(Collectors.toList());
+            return ApiResponse.success(classDTOs);
         } catch (Exception e) {
             return ApiResponse.error("获取班级列表失败：" + e.getMessage());
         }
     }
 
     @PutMapping("/{id}")
-    public ApiResponse<ClassInfo> updateClass(@PathVariable Long id, @RequestBody ClassInfo classInfo) {
+    public ApiResponse<ClassDTO> updateClass(@PathVariable Long id, @RequestBody ClassInfo classInfo) {
         try {
             classInfo.setId(id);
             ClassInfo updated = classService.updateClass(classInfo);
-            return ApiResponse.success("班级更新成功", updated);
+            return ApiResponse.success("班级更新成功", ClassMapper.toDTO(updated));
         } catch (Exception e) {
             return ApiResponse.error("更新班级失败：" + e.getMessage());
         }
@@ -80,6 +108,21 @@ public class ClassController {
     public ApiResponse<Void> addStudentToClass(@PathVariable Long classId, @PathVariable Long studentId) {
         try {
             classService.addStudentToClass(classId, studentId);
+            return ApiResponse.success("学生添加成功", null);
+        } catch (Exception e) {
+            return ApiResponse.error("添加学生失败：" + e.getMessage());
+        }
+    }
+
+    @PostMapping("/{classId}/students/batch")
+    public ApiResponse<Void> addStudentsToClass(@PathVariable Long classId, @RequestBody List<Long> studentIds) {
+        try {
+            for (Long studentId : studentIds) {
+                try {
+                    classService.addStudentToClass(classId, studentId);
+                } catch (Exception ignored) {
+                }
+            }
             return ApiResponse.success("学生添加成功", null);
         } catch (Exception e) {
             return ApiResponse.error("添加学生失败：" + e.getMessage());

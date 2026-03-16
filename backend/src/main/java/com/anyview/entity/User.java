@@ -1,6 +1,7 @@
 package com.anyview.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -16,26 +17,28 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false, unique = true)
     private String username;
 
+    @JsonIgnore
     @Column(nullable = false)
     private String password;
 
     @Column(nullable = false)
-    private String email;
-
     private String realName;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private UserRole role;
+    @Column(nullable = false, unique = true)
+    private String email;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @Column(nullable = false)
+    private String role; // student, teacher, admin
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "school_id")
+    @JsonIgnore
     private School school;
 
-    @Column(nullable = false)
+    @Column(nullable = false, columnDefinition = "boolean default true")
     private Boolean enabled = true;
 
     @CreationTimestamp
@@ -47,11 +50,4 @@ public class User {
     @Column(name = "updated_at")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime updatedAt;
-
-    public User() {
-    }
-
-    public User(Long id) {
-        this.id = id;
-    }
 }

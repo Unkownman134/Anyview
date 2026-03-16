@@ -1,6 +1,7 @@
 package com.anyview.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -46,6 +47,7 @@ public class Assignment {
     private Boolean published = false;
 
     @OneToMany(mappedBy = "assignment", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<AssignmentQuestion> assignmentQuestions;
 
     @CreationTimestamp

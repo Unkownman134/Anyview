@@ -1,7 +1,6 @@
 package com.anyview.repository;
 
 import com.anyview.entity.User;
-import com.anyview.entity.UserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -15,7 +14,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
     boolean existsByUsername(String username);
     boolean existsByEmail(String email);
-    List<User> findByRole(UserRole role);
+    List<User> findByRole(String role);
+    List<User> findByRoleAndSchoolId(String role, Long schoolId);
     @Query("SELECT u FROM User u WHERE u.role = :role AND u.enabled = true")
-    List<User> findActiveUsersByRole(UserRole role);
+    List<User> findActiveUsersByRole(String role);
+    long countByRole(String role);
 }

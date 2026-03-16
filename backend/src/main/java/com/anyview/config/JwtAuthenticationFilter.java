@@ -24,6 +24,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
+        // 跳过不需要认证的路径
+        String path = request.getRequestURI();
+        if (path.startsWith("/auth/") || path.startsWith("/public/") || path.startsWith("/schools/") || 
+            path.startsWith("/redis/") || path.startsWith("/session/") || path.startsWith("/questions") || 
+            path.startsWith("/assignments")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
         try {
             String jwt = getJwtFromRequest(request);
 

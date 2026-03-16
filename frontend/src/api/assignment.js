@@ -43,3 +43,11 @@ export function publishAssignment(id) {
     method: 'post'
   })
 }
+
+export function createAssignmentWithQuestions(data) {
+  return request({
+    url: '/assignments/with-questions',
+    method: 'post',
+    data
+  })
+}

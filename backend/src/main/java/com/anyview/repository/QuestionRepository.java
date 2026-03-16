@@ -9,6 +9,7 @@ import java.util.List;
 @Repository
 public interface QuestionRepository extends JpaRepository<Question, Long> {
     List<Question> findByCreatorId(Long creatorId);
-    List<Question> findByIsPublicTrue();
-    List<Question> findByDifficulty(Integer difficulty);
+    List<Question> findByDifficulty(String difficulty);
+    long countByDifficulty(String difficulty);
+    long countByCreatorId(Long creatorId);
 }

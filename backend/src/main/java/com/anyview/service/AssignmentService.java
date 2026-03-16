@@ -43,8 +43,12 @@ public class AssignmentService {
         
         // 清除相关缓存
         redisUtil.delete(ASSIGNMENTS_LIST_PREFIX + "all");
-        redisUtil.delete(ASSIGNMENTS_LIST_PREFIX + "teacher:" + assignment.getTeacher().getId());
-        redisUtil.delete(ASSIGNMENTS_LIST_PREFIX + "class:" + assignment.getClassInfo().getId());
+        if (assignment.getTeacher() != null) {
+            redisUtil.delete(ASSIGNMENTS_LIST_PREFIX + "teacher:" + assignment.getTeacher().getId());
+        }
+        if (assignment.getClassInfo() != null) {
+            redisUtil.delete(ASSIGNMENTS_LIST_PREFIX + "class:" + assignment.getClassInfo().getId());
+        }
         redisUtil.delete(ASSIGNMENTS_LIST_PREFIX + "published");
         
         return savedAssignment;
@@ -117,8 +121,12 @@ public class AssignmentService {
         
         // 清除相关列表缓存
         redisUtil.delete(ASSIGNMENTS_LIST_PREFIX + "all");
-        redisUtil.delete(ASSIGNMENTS_LIST_PREFIX + "teacher:" + assignment.getTeacher().getId());
-        redisUtil.delete(ASSIGNMENTS_LIST_PREFIX + "class:" + assignment.getClassInfo().getId());
+        if (assignment.getTeacher() != null) {
+            redisUtil.delete(ASSIGNMENTS_LIST_PREFIX + "teacher:" + assignment.getTeacher().getId());
+        }
+        if (assignment.getClassInfo() != null) {
+            redisUtil.delete(ASSIGNMENTS_LIST_PREFIX + "class:" + assignment.getClassInfo().getId());
+        }
         redisUtil.delete(ASSIGNMENTS_LIST_PREFIX + "published");
         
         return updatedAssignment;
@@ -135,8 +143,12 @@ public class AssignmentService {
             
             // 清除相关列表缓存
             redisUtil.delete(ASSIGNMENTS_LIST_PREFIX + "all");
-            redisUtil.delete(ASSIGNMENTS_LIST_PREFIX + "teacher:" + assignment.getTeacher().getId());
-            redisUtil.delete(ASSIGNMENTS_LIST_PREFIX + "class:" + assignment.getClassInfo().getId());
+            if (assignment.getTeacher() != null) {
+                redisUtil.delete(ASSIGNMENTS_LIST_PREFIX + "teacher:" + assignment.getTeacher().getId());
+            }
+            if (assignment.getClassInfo() != null) {
+                redisUtil.delete(ASSIGNMENTS_LIST_PREFIX + "class:" + assignment.getClassInfo().getId());
+            }
             redisUtil.delete(ASSIGNMENTS_LIST_PREFIX + "published");
         }
     }
@@ -154,8 +166,12 @@ public class AssignmentService {
         
         // 清除相关缓存
         redisUtil.delete(ASSIGNMENTS_LIST_PREFIX + "all");
-        redisUtil.delete(ASSIGNMENTS_LIST_PREFIX + "teacher:" + assignment.getTeacher().getId());
-        redisUtil.delete(ASSIGNMENTS_LIST_PREFIX + "class:" + assignment.getClassInfo().getId());
+        if (assignment.getTeacher() != null) {
+            redisUtil.delete(ASSIGNMENTS_LIST_PREFIX + "teacher:" + assignment.getTeacher().getId());
+        }
+        if (assignment.getClassInfo() != null) {
+            redisUtil.delete(ASSIGNMENTS_LIST_PREFIX + "class:" + assignment.getClassInfo().getId());
+        }
         redisUtil.delete(ASSIGNMENTS_LIST_PREFIX + "published");
         
         return result;
@@ -172,8 +188,12 @@ public class AssignmentService {
         
         // 清除相关列表缓存
         redisUtil.delete(ASSIGNMENTS_LIST_PREFIX + "all");
-        redisUtil.delete(ASSIGNMENTS_LIST_PREFIX + "teacher:" + assignment.getTeacher().getId());
-        redisUtil.delete(ASSIGNMENTS_LIST_PREFIX + "class:" + assignment.getClassInfo().getId());
+        if (assignment.getTeacher() != null) {
+            redisUtil.delete(ASSIGNMENTS_LIST_PREFIX + "teacher:" + assignment.getTeacher().getId());
+        }
+        if (assignment.getClassInfo() != null) {
+            redisUtil.delete(ASSIGNMENTS_LIST_PREFIX + "class:" + assignment.getClassInfo().getId());
+        }
         redisUtil.delete(ASSIGNMENTS_LIST_PREFIX + "published");
     }
 }

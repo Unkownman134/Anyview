@@ -7,6 +7,20 @@ export function getUsers() {
   })
 }
 
+export function getUsersByRole(role) {
+  return request({
+    url: `/users/role/${role}`,
+    method: 'get'
+  })
+}
+
+export function getUsersByRoleAndSchool(role, schoolId) {
+  return request({
+    url: `/users/role/${role}/school/${schoolId}`,
+    method: 'get'
+  })
+}
+
 export function getUserById(id) {
   return request({
     url: `/users/${id}`,
