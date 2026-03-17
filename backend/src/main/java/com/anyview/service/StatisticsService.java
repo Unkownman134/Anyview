@@ -2,6 +2,8 @@ package com.anyview.service;
 
 import com.anyview.dto.StatisticsDTO;
 import com.anyview.entity.SubmissionStatus;
+import com.anyview.repository.AssignmentRepository;
+import com.anyview.repository.ClassRepository;
 import com.anyview.repository.QuestionRepository;
 import com.anyview.repository.SubmissionRepository;
 import com.anyview.repository.UserRepository;
@@ -23,14 +25,26 @@ public class StatisticsService {
     @Autowired
     private SubmissionRepository submissionRepository;
 
+    @Autowired
+    private ClassRepository classRepository;
+
+    @Autowired
+    private AssignmentRepository assignmentRepository;
+
     public StatisticsDTO getStatistics() {
         StatisticsDTO stats = new StatisticsDTO();
 
         // 总用户数
         stats.setTotalUsers(userRepository.count());
 
+        // 总班级数
+        stats.setTotalClasses(classRepository.count());
+
         // 总题目数
         stats.setTotalQuestions(questionRepository.count());
+
+        // 总作业数
+        stats.setTotalAssignments(assignmentRepository.count());
 
         // 总提交数
         stats.setTotalSubmissions(submissionRepository.count());

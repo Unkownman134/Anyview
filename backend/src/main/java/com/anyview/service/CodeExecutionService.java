@@ -7,9 +7,16 @@ import java.io.*;
 import java.util.concurrent.*;
 
 @Service
-@RequiredArgsConstructor
 public class CodeExecutionService {
     private final ExecutorService executorService = Executors.newCachedThreadPool();
+    private final File tempDir;
+
+    public CodeExecutionService() {
+        this.tempDir = new File("temp");
+        if (!tempDir.exists()) {
+            tempDir.mkdirs();
+        }
+    }
 
     public ExecutionResult executeCode(String code, String language) throws Exception {
         switch (language.toLowerCase()) {
@@ -23,20 +30,17 @@ public class CodeExecutionService {
     }
 
     private ExecutionResult executeJavaCode(String code) throws Exception {
-        // 创建临时目录
-        File tempDir = new File(System.getProperty("java.io.tmpdir"), "anyview_" + System.currentTimeMillis());
-        if (!tempDir.mkdir()) {
+        File executionDir = new File(tempDir, "anyview_" + System.currentTimeMillis());
+        if (!executionDir.mkdir()) {
             throw new IOException("无法创建临时目录");
         }
 
         try {
-            // 创建Java文件
-            File javaFile = new File(tempDir, "Solution.java");
+            File javaFile = new File(executionDir, "Solution.java");
             try (FileWriter writer = new FileWriter(javaFile)) {
                 writer.write(code);
             }
 
-            // 编译Java文件
             Process compileProcess = Runtime.getRuntime().exec(
                     "javac " + javaFile.getAbsolutePath()
             );
@@ -47,12 +51,10 @@ public class CodeExecutionService {
                 return new ExecutionResult(false, "编译错误: " + compileError, null);
             }
 
-            // 执行Java程序
             Process executeProcess = Runtime.getRuntime().exec(
-                    "java -cp " + tempDir.getAbsolutePath() + " Solution"
+                    "java -cp " + executionDir.getAbsolutePath() + " Solution"
             );
 
-            // 限制执行时间
             Future<ExecutionResult> future = executorService.submit(() -> {
                 String output = readStream(executeProcess.getInputStream());
                 String error = readStream(executeProcess.getErrorStream());
@@ -72,25 +74,26 @@ public class CodeExecutionService {
             }
 
         } finally {
-            // 清理临时文件
-            deleteDirectory(tempDir);
+            deleteDirectory(executionDir);
         }
     }
 
     private ExecutionResult executePythonCode(String code) throws Exception {
-        // 创建临时文件
-        File tempFile = File.createTempFile("solution", ".py");
+        File executionDir = new File(tempDir, "anyview_" + System.currentTimeMillis());
+        if (!executionDir.mkdir()) {
+            throw new IOException("无法创建临时目录");
+        }
+
+        File tempFile = new File(executionDir, "solution.py");
         try (FileWriter writer = new FileWriter(tempFile)) {
             writer.write(code);
         }
 
         try {
-            // 执行Python程序
             Process process = Runtime.getRuntime().exec(
                     "python " + tempFile.getAbsolutePath()
             );
 
-            // 限制执行时间
             Future<ExecutionResult> future = executorService.submit(() -> {
                 String output = readStream(process.getInputStream());
                 String error = readStream(process.getErrorStream());
@@ -110,7 +113,7 @@ public class CodeExecutionService {
             }
 
         } finally {
-            tempFile.delete();
+            deleteDirectory(executionDir);
         }
     }
 

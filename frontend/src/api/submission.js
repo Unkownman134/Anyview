@@ -36,3 +36,10 @@ export function gradeSubmission(id, data) {
     data
   })
 }
+
+export function getSubmissionById(id) {
+  return request({
+    url: `/submissions/${id}`,
+    method: 'get'
+  })
+}

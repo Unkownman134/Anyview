@@ -90,6 +90,41 @@
       </template>
     </el-dialog>
 
+    <el-dialog v-model="showEditDialog" title="编辑班级" width="500px">
+      <el-form :model="classForm" label-width="80px">
+        <el-form-item label="学校">
+          <el-select v-model="classForm.schoolId" placeholder="请选择学校" style="width: 100%" @change="handleSchoolChange">
+            <el-option
+              v-for="school in schools"
+              :key="school.id"
+              :label="school.name"
+              :value="school.id"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="教师">
+          <el-select v-model="classForm.teacherId" placeholder="请先选择学校" style="width: 100%" :disabled="!classForm.schoolId">
+            <el-option
+              v-for="teacher in teachers"
+              :key="teacher.id"
+              :label="teacher.realName"
+              :value="teacher.id"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="班级名称">
+          <el-input v-model="classForm.className" />
+        </el-form-item>
+        <el-form-item label="描述">
+          <el-input v-model="classForm.description" type="textarea" />
+        </el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="showEditDialog = false">取消</el-button>
+        <el-button type="primary" @click="handleUpdate">确定</el-button>
+      </template>
+    </el-dialog>
+
     <el-dialog v-model="showStudentsDialog" title="班级学生信息" width="700px">
       <el-table :data="classStudents" style="width: 100%">
         <el-table-column prop="student.id" label="ID" width="80" />
@@ -153,6 +188,7 @@ const classes = ref([])
 const schools = ref([])
 const teachers = ref([])
 const showCreateDialog = ref(false)
+const showEditDialog = ref(false)
 const showStudentsDialog = ref(false)
 const showAddStudentsDialog = ref(false)
 const classStudents = ref([])
@@ -160,6 +196,7 @@ const availableStudents = ref([])
 const selectedStudents = ref([])
 const currentClass = ref(null)
 const studentTableRef = ref(null)
+const editingClassId = ref(null)
 const classForm = reactive({
   schoolId: null,
   teacherId: null,
@@ -228,14 +265,60 @@ const handleCreate = async () => {
     await createClass(classData)
     ElMessage.success('创建成功')
     showCreateDialog.value = false
+    resetForm()
     loadClasses()
   } catch (error) {
     ElMessage.error('创建失败')
   }
 }
 
+const handleUpdate = async () => {
+  if (!classForm.schoolId) {
+    ElMessage.error('请选择学校')
+    return
+  }
+  if (!classForm.teacherId) {
+    ElMessage.error('请选择教师')
+    return
+  }
+  if (!classForm.className) {
+    ElMessage.error('请输入班级名称')
+    return
+  }
+
+  try {
+    const classData = {
+      schoolId: classForm.schoolId,
+      teacherId: classForm.teacherId,
+      className: classForm.className,
+      description: classForm.description
+    }
+    await updateClass(editingClassId.value, classData)
+    ElMessage.success('更新成功')
+    showEditDialog.value = false
+    resetForm()
+    loadClasses()
+  } catch (error) {
+    ElMessage.error('更新失败')
+  }
+}
+
+const resetForm = () => {
+  classForm.schoolId = null
+  classForm.teacherId = null
+  classForm.className = ''
+  classForm.description = ''
+  editingClassId.value = null
+}
+
 const handleEdit = (row) => {
-  ElMessage.info('编辑功能待实现')
+  editingClassId.value = row.id
+  classForm.schoolId = row.school.id
+  classForm.teacherId = row.teacher.id
+  classForm.className = row.className
+  classForm.description = row.description
+  loadTeachersBySchool(row.school.id)
+  showEditDialog.value = true
 }
 
 const handleDelete = async (row) => {

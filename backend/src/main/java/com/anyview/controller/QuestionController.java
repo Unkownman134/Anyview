@@ -2,6 +2,7 @@ package com.anyview.controller;
 
 import com.anyview.dto.ApiResponse;
 import com.anyview.dto.QuestionDTO;
+import com.anyview.entity.Question;
 import com.anyview.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -17,8 +18,26 @@ public class QuestionController {
     @PostMapping
     public ApiResponse<QuestionDTO> createQuestion(@RequestBody QuestionDTO questionDTO) {
         try {
-            // 这里需要根据DTO创建Question实体，暂时返回成功
-            return ApiResponse.success(questionDTO);
+            Question question = new Question();
+            question.setTitle(questionDTO.getTitle());
+            question.setDescription(questionDTO.getDescription());
+            question.setType(questionDTO.getType() != null ? questionDTO.getType().name().toLowerCase() : "programming");
+            question.setOptions(questionDTO.getOptions());
+            question.setAnswer(questionDTO.getAnswer());
+            question.setScore(questionDTO.getScore() != null ? questionDTO.getScore() : 10);
+            question.setDifficulty(questionDTO.getDifficulty() != null ? (questionDTO.getDifficulty() == 1 ? "easy" : questionDTO.getDifficulty() == 2 ? "medium" : "hard") : "easy");
+            question.setAnalysis(questionDTO.getAnalysis());
+            question.setTemplateCode(questionDTO.getTemplateCode());
+            question.setSampleInput(questionDTO.getSampleInput());
+            question.setSampleOutput(questionDTO.getSampleOutput());
+            question.setTestCases(questionDTO.getTestCases());
+            question.setReferenceSolution(questionDTO.getReferenceSolution());
+            question.setTimeLimit(questionDTO.getTimeLimit());
+            question.setMemoryLimit(questionDTO.getMemoryLimit());
+            question.setIsPublic(questionDTO.isPublic());
+            
+            Question saved = questionService.createQuestion(question);
+            return ApiResponse.success(questionService.convertToDTO(saved));
         } catch (Exception e) {
             return ApiResponse.error("创建题目失败：" + e.getMessage());
         }
@@ -77,8 +96,29 @@ public class QuestionController {
     @PutMapping("/update")
     public ApiResponse<QuestionDTO> updateQuestion(@RequestBody QuestionDTO questionDTO) {
         try {
-            // 这里需要根据DTO更新Question实体，暂时返回成功
-            return ApiResponse.success(questionDTO);
+            Question question = questionService.getQuestionById(questionDTO.getId());
+            if (question == null) {
+                return ApiResponse.error("题目不存在");
+            }
+            question.setTitle(questionDTO.getTitle());
+            question.setDescription(questionDTO.getDescription());
+            question.setType(questionDTO.getType() != null ? questionDTO.getType().name().toLowerCase() : "programming");
+            question.setOptions(questionDTO.getOptions());
+            question.setAnswer(questionDTO.getAnswer());
+            question.setScore(questionDTO.getScore() != null ? questionDTO.getScore() : 10);
+            question.setDifficulty(questionDTO.getDifficulty() != null ? (questionDTO.getDifficulty() == 1 ? "easy" : questionDTO.getDifficulty() == 2 ? "medium" : "hard") : "easy");
+            question.setAnalysis(questionDTO.getAnalysis());
+            question.setTemplateCode(questionDTO.getTemplateCode());
+            question.setSampleInput(questionDTO.getSampleInput());
+            question.setSampleOutput(questionDTO.getSampleOutput());
+            question.setTestCases(questionDTO.getTestCases());
+            question.setReferenceSolution(questionDTO.getReferenceSolution());
+            question.setTimeLimit(questionDTO.getTimeLimit());
+            question.setMemoryLimit(questionDTO.getMemoryLimit());
+            question.setIsPublic(questionDTO.isPublic());
+            
+            Question updated = questionService.updateQuestion(question);
+            return ApiResponse.success(questionService.convertToDTO(updated));
         } catch (Exception e) {
             return ApiResponse.error("更新题目失败：" + e.getMessage());
         }

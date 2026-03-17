@@ -1,9 +1,14 @@
 package com.anyview.controller;
 
 import com.anyview.dto.ApiResponse;
+import com.anyview.dto.GradeRequest;
+import com.anyview.dto.SubmissionGradeResponse;
 import com.anyview.entity.Submission;
+import com.anyview.repository.SubmissionRepository;
 import com.anyview.service.SubmissionService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,14 +17,20 @@ import java.util.List;
 @RequestMapping("/submissions")
 @RequiredArgsConstructor
 public class SubmissionController {
+    private final SubmissionRepository submissionRepository;
     private final SubmissionService submissionService;
+    private static final Logger logger = LoggerFactory.getLogger(SubmissionController.class);
 
     @GetMapping
     public ApiResponse<List<Submission>> getSubmissions() {
         try {
             List<Submission> submissions = submissionService.getSubmissions();
+            logger.info("获取提交记录列表，数量: {}", submissions.size());
+            submissions.forEach(sub -> logger.info("提交记录: ID={}, 学生ID={}, 作业ID={}, 题目ID={}", 
+                sub.getId(), sub.getStudentId(), sub.getAssignmentId(), sub.getQuestionId()));
             return ApiResponse.success(submissions);
         } catch (Exception e) {
+            logger.error("获取提交列表失败", e);
             return ApiResponse.error("获取提交列表失败：" + e.getMessage());
         }
     }
@@ -37,7 +48,7 @@ public class SubmissionController {
     @GetMapping("/{id}")
     public ApiResponse<Submission> getSubmissionById(@PathVariable Long id) {
         try {
-            Submission submission = submissionService.getSubmissionById(id);
+            Submission submission = submissionService.getSubmissionByIdWithDetails(id);
             return ApiResponse.success(submission);
         } catch (Exception e) {
             return ApiResponse.error("获取提交信息失败：" + e.getMessage());
@@ -57,7 +68,7 @@ public class SubmissionController {
     @GetMapping("/assignment/{assignmentId}")
     public ApiResponse<List<Submission>> getSubmissionsByAssignment(@PathVariable Long assignmentId) {
         try {
-            List<Submission> submissions = submissionService.getSubmissionsByAssignment(assignmentId);
+            List<Submission> submissions = submissionRepository.findByAssignmentIdWithDetails(assignmentId);
             return ApiResponse.success(submissions);
         } catch (Exception e) {
             return ApiResponse.error("获取提交列表失败：" + e.getMessage());
@@ -97,11 +108,11 @@ public class SubmissionController {
     }
 
     @PostMapping("/{id}/grade")
-    public ApiResponse<Submission> gradeSubmission(
+    public ApiResponse<SubmissionGradeResponse> gradeSubmission(
             @PathVariable Long id,
             @RequestBody GradeRequest request) {
         try {
-            Submission graded = submissionService.gradeSubmission(id, request.getScore(), request.getTeacherComment());
+            SubmissionGradeResponse graded = submissionService.gradeSubmission(id, request.getScore(), request.getTeacherComment());
             return ApiResponse.success("评分成功", graded);
         } catch (Exception e) {
             return ApiResponse.error("评分失败：" + e.getMessage());
@@ -118,24 +129,16 @@ public class SubmissionController {
         }
     }
 
-    public static class GradeRequest {
-        private Integer score;
-        private String teacherComment;
-
-        public Integer getScore() {
-            return score;
-        }
-
-        public void setScore(Integer score) {
-            this.score = score;
-        }
-
-        public String getTeacherComment() {
-            return teacherComment;
-        }
-
-        public void setTeacherComment(String teacherComment) {
-            this.teacherComment = teacherComment;
+    @GetMapping("/{id}/question")
+    public ApiResponse<com.anyview.entity.Question> getSubmissionQuestion(@PathVariable Long id) {
+        try {
+            Submission submission = submissionService.getSubmissionById(id);
+            if (submission == null) {
+                return ApiResponse.error("提交记录不存在");
+            }
+            return ApiResponse.success(submission.getQuestion());
+        } catch (Exception e) {
+            return ApiResponse.error("获取题目信息失败：" + e.getMessage());
         }
     }
 }

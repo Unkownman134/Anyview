@@ -5,6 +5,7 @@ import java.util.Map;
 public class StatisticsDTO {
     // 总体统计
     private long totalUsers;
+    private long totalClasses;
     private long totalQuestions;
     private long totalAssignments;
     private long totalSubmissions;
@@ -34,6 +35,14 @@ public class StatisticsDTO {
 
     public void setTotalUsers(long totalUsers) {
         this.totalUsers = totalUsers;
+    }
+
+    public long getTotalClasses() {
+        return totalClasses;
+    }
+
+    public void setTotalClasses(long totalClasses) {
+        this.totalClasses = totalClasses;
     }
 
     public long getTotalQuestions() {

@@ -51,3 +51,26 @@ export function createAssignmentWithQuestions(data) {
     data
   })
 }
+
+export function getAssignmentById(id) {
+  return request({
+    url: `/assignments/${id}`,
+    method: 'get'
+  })
+}
+
+export function updateAssignmentData(id, data) {
+  return request({
+    url: `/assignments/${id}`,
+    method: 'put',
+    data
+  })
+}
+
+export function updateAssignmentWithQuestions(id, data) {
+  return request({
+    url: `/assignments/${id}/with-questions`,
+    method: 'put',
+    data
+  })
+}

@@ -61,6 +61,33 @@
 - 提交记录查询
 - AI辅助批改
 - 代码质量评估
+- 智能代码分析
+- 自动评分
+- 错误诊断和反馈
+- 代码语言识别
+- 支持多种题型：编程题、选择题、填空题
+- 填空题教师手动批改
+- 选择题和编程题自动批改
+- 批改分数限制为[0,该题分]
+- 教师评语必填
+- 一次提交支持多个题目
+- 双线程提交，编程题异步处理
+- 临时文件存储在项目内
+
+### API配置管理
+- 管理员配置AI API信息
+- API密钥管理
+- 测试连接功能
+- API配置的增删改查
+
+### Dashboard统计
+- 实时统计数据展示
+- 总用户数、班级数、题目数、作业数
+- 按角色统计用户分布
+- 按难度统计题目分布
+- 按状态统计提交分布
+- 最近7天提交趋势
+- 角色特定功能介绍
 
 ### 系统功能
 - Redis缓存热点数据
@@ -239,6 +266,18 @@ npm run dev
 - POST /submissions - 创建提交
 - POST /submissions/{id}/grade - 批改作业
 
+### API配置接口
+- GET /api-configs - 获取API配置列表
+- POST /api-configs - 创建API配置
+- PUT /api-configs/{id} - 更新API配置
+- DELETE /api-configs/{id} - 删除API配置
+- POST /api-configs/test - 测试API连接
+
+### 统计接口
+- GET /statistics/overall - 获取总体统计数据
+- GET /statistics/question/{id} - 获取题目统计数据
+- GET /statistics/user/{id} - 获取用户统计数据
+
 ### Redis测试接口
 - POST /redis/set - 设置缓存
 - GET /redis/get - 获取缓存
@@ -266,15 +305,54 @@ npm run dev
 
 ## AI 配置
 
-在 `application.yml` 中配置 AI API：
-```yaml
-ai:
-  api:
-    key: your_api_key
-    url: https://api.openai.com/v1/chat/completions
-```
+AI API配置通过系统管理界面进行配置：
+
+1. 以管理员身份登录系统
+2. 进入"API配置"页面
+3. 点击"新建配置"按钮
+4. 填写以下信息：
+   - 配置名称：如"智谱AI"
+   - API密钥：智谱AI的API Key（格式：{API Key ID}.{secret}）
+   - API URL：https://open.bigmodel.cn/api/paas/v4/chat/completions
+   - 模型名称：glm-4-flash
+5. 点击"测试连接"验证配置是否正确
+6. 保存配置
+
+系统将使用配置的AI API进行：
+- 学生作业的智能代码分析
+- 自动评分和反馈生成
+- 错误诊断和代码建议
+
+### 智谱AI API获取方式
+1. 访问 https://open.bigmodel.cn/
+2. 注册并登录账号
+3. 在控制台创建API Key
+4. 复制完整的API Key（包含ID和secret）
 
 ## 最新更新
+
+### v1.2.0 (2026-03-18)
+- ✅ 修复批改按钮只对填空题显示
+- ✅ 修复分数限制为[0,该题分]
+- ✅ 修复提交逻辑，允许一次提交多个题目
+- ✅ 添加参考答案显示（编程题）
+- ✅ 添加教师评语显示（所有题型）
+- ✅ 优化临时文件管理，存储在项目内
+- ✅ 实现双线程提交，编程题异步处理
+- ✅ 添加统计API接口
+
+### v1.1.0 (2026-03-17)
+- ✅ 实现AI API配置管理功能
+- ✅ 添加API配置的增删改查接口
+- ✅ 实现API连接测试功能
+- ✅ 集成智谱GLM-4.7-Flash API
+- ✅ 实现学生作业提交和AI评分功能
+- ✅ 添加代码语言识别
+- ✅ 添加错误诊断和反馈
+- ✅ 实现Dashboard实时统计功能
+- ✅ 添加角色特定功能介绍
+- ✅ 修复SPA路由刷新404问题
+- ✅ 优化API配置管理界面
 
 ### v1.0.0 (2026-03-15)
 - ✅ 完善Redis缓存系统

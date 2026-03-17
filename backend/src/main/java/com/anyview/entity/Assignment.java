@@ -2,6 +2,7 @@ package com.anyview.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -13,6 +14,7 @@ import java.util.List;
 @Entity
 @Table(name = "assignments")
 @Data
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Assignment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,12 +27,20 @@ public class Assignment {
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "class_id")
+    @JoinColumn(name = "class_id", insertable = false, updatable = false)
+    @JsonIgnore
     private ClassInfo classInfo;
 
+    @Column(name = "class_id")
+    private Long classId;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "teacher_id")
+    @JoinColumn(name = "teacher_id", insertable = false, updatable = false)
+    @JsonIgnore
     private User teacher;
+
+    @Column(name = "teacher_id")
+    private Long teacherId;
 
     @Column(nullable = false)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -47,7 +57,6 @@ public class Assignment {
     private Boolean published = false;
 
     @OneToMany(mappedBy = "assignment", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
     private List<AssignmentQuestion> assignmentQuestions;
 
     @CreationTimestamp

@@ -87,21 +87,25 @@ public class QuestionService {
         QuestionDTO dto = new QuestionDTO();
         dto.setId(question.getId());
         dto.setTitle(question.getTitle());
-        dto.setDescription(question.getContent());
-        dto.setSampleInput(question.getTemplateCode());
-        dto.setSampleOutput(question.getAnswer());
+        dto.setDescription(question.getDescription());
+        dto.setOptions(question.getOptions());
+        dto.setAnswer(question.getAnswer());
+        dto.setScore(question.getScore());
+        dto.setAnalysis(question.getAnalysis());
+        dto.setTemplateCode(question.getTemplateCode());
+        dto.setSampleInput(question.getSampleInput());
+        dto.setSampleOutput(question.getSampleOutput());
         dto.setTestCases(question.getTestCases());
-        dto.setReferenceSolution(question.getAnalysis());
+        dto.setReferenceSolution(question.getReferenceSolution());
         dto.setDifficulty(question.getDifficulty().equals("easy") ? 1 : question.getDifficulty().equals("medium") ? 2 : 3);
-        dto.setTimeLimit(1000); // 默认值
-        dto.setMemoryLimit(1048576); // 默认值
-        // 转换类型：String -> QuestionType
+        dto.setTimeLimit(question.getTimeLimit());
+        dto.setMemoryLimit(question.getMemoryLimit());
         try {
             dto.setType(QuestionType.valueOf(question.getType().toUpperCase()));
         } catch (Exception e) {
-            dto.setType(QuestionType.PROGRAMMING); // 默认值
+            dto.setType(QuestionType.PROGRAMMING);
         }
-        dto.setPublic(true); // 默认值
+        dto.setPublic(question.getIsPublic() != null ? question.getIsPublic() : true);
         if (question.getCreator() != null) {
             dto.setCreatorId(question.getCreator().getId());
             dto.setCreatorName(question.getCreator().getUsername());

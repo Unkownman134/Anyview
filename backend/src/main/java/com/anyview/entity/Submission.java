@@ -1,6 +1,7 @@
 package com.anyview.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "submissions")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Submission {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,19 +20,25 @@ public class Submission {
     @JoinColumn(name = "assignment_id")
     private Assignment assignment;
 
+    @Column(name = "assignment_id", insertable = false, updatable = false)
+    private Long assignmentId;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "question_id")
     private Question question;
+
+    @Column(name = "question_id", insertable = false, updatable = false)
+    private Long questionId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id")
     private User student;
 
-    @Column(columnDefinition = "TEXT")
-    private String code;
+    @Column(name = "student_id", insertable = false, updatable = false)
+    private Long studentId;
 
     @Column(columnDefinition = "TEXT")
-    private String language;
+    private String code;
 
     @Enumerated(EnumType.STRING)
     private SubmissionStatus status;
@@ -50,8 +58,11 @@ public class Submission {
     @Column(columnDefinition = "TEXT")
     private String aiFeedback;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT", nullable = false)
     private String teacherComment;
+
+    @Enumerated(EnumType.STRING)
+    private GradeStatus gradeStatus = GradeStatus.UNGRADED;
 
     @CreationTimestamp
     @Column(name = "created_at")
@@ -80,12 +91,28 @@ public class Submission {
         this.assignment = assignment;
     }
 
+    public Long getAssignmentId() {
+        return assignmentId;
+    }
+
+    public void setAssignmentId(Long assignmentId) {
+        this.assignmentId = assignmentId;
+    }
+
     public Question getQuestion() {
         return question;
     }
 
     public void setQuestion(Question question) {
         this.question = question;
+    }
+
+    public Long getQuestionId() {
+        return questionId;
+    }
+
+    public void setQuestionId(Long questionId) {
+        this.questionId = questionId;
     }
 
     public User getStudent() {
@@ -96,20 +123,20 @@ public class Submission {
         this.student = student;
     }
 
+    public Long getStudentId() {
+        return studentId;
+    }
+
+    public void setStudentId(Long studentId) {
+        this.studentId = studentId;
+    }
+
     public String getCode() {
         return code;
     }
 
     public void setCode(String code) {
         this.code = code;
-    }
-
-    public String getLanguage() {
-        return language;
-    }
-
-    public void setLanguage(String language) {
-        this.language = language;
     }
 
     public SubmissionStatus getStatus() {
@@ -166,6 +193,14 @@ public class Submission {
 
     public void setTeacherComment(String teacherComment) {
         this.teacherComment = teacherComment;
+    }
+
+    public GradeStatus getGradeStatus() {
+        return gradeStatus;
+    }
+
+    public void setGradeStatus(GradeStatus gradeStatus) {
+        this.gradeStatus = gradeStatus;
     }
 
     public LocalDateTime getCreatedAt() {

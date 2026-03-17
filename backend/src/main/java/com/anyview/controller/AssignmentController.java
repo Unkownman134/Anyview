@@ -48,9 +48,13 @@ public class AssignmentController {
     @GetMapping("/{id}")
     public ApiResponse<Assignment> getAssignmentById(@PathVariable Long id) {
         try {
+            System.out.println("收到获取作业详情请求，作业ID: " + id);
             Assignment assignment = assignmentService.getAssignmentById(id);
+            System.out.println("作业题目数量: " + (assignment != null && assignment.getAssignmentQuestions() != null ? assignment.getAssignmentQuestions().size() : 0));
             return ApiResponse.success(assignment);
         } catch (Exception e) {
+            System.err.println("获取作业详情失败: " + e.getMessage());
+            e.printStackTrace();
             return ApiResponse.error("获取作业信息失败：" + e.getMessage());
         }
     }
@@ -96,6 +100,19 @@ public class AssignmentController {
         }
     }
 
+    @PutMapping("/{id}/with-questions")
+    public ApiResponse<Assignment> updateAssignmentWithQuestions(@PathVariable Long id, @RequestBody AssignmentRequest request) {
+        try {
+            Assignment assignment = request.getAssignment();
+            assignment.setId(id);
+            List<AssignmentQuestion> questions = request.getQuestions();
+            Assignment updated = assignmentService.updateAssignmentWithQuestions(id, assignment, questions);
+            return ApiResponse.success("作业更新成功", updated);
+        } catch (Exception e) {
+            return ApiResponse.error("更新作业失败：" + e.getMessage());
+        }
+    }
+
     @DeleteMapping("/{id}")
     public ApiResponse<Void> deleteAssignment(@PathVariable Long id) {
         try {
@@ -117,6 +134,27 @@ public class AssignmentController {
     }
 
     public static class CreateAssignmentRequest {
+        private Assignment assignment;
+        private List<AssignmentQuestion> questions;
+
+        public Assignment getAssignment() {
+            return assignment;
+        }
+
+        public void setAssignment(Assignment assignment) {
+            this.assignment = assignment;
+        }
+
+        public List<AssignmentQuestion> getQuestions() {
+            return questions;
+        }
+
+        public void setQuestions(List<AssignmentQuestion> questions) {
+            this.questions = questions;
+        }
+    }
+
+    public static class AssignmentRequest {
         private Assignment assignment;
         private List<AssignmentQuestion> questions;
 

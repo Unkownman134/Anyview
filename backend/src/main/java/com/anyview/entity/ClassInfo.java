@@ -8,6 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "classes")
@@ -27,10 +28,13 @@ public class ClassInfo {
     @JsonIgnore
     private School school;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+  @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "teacher_id")
     @JsonIgnore
     private User teacher;
+
+    @OneToMany(mappedBy = "classInfo", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ClassStudent> students;
 
     @CreationTimestamp
     @Column(name = "created_at")

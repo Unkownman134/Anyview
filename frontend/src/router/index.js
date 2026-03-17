@@ -45,6 +45,12 @@ const routes = [
         component: () => import('@/views/Submissions.vue')
       },
       {
+        path: 'api-configs',
+        name: 'ApiConfigs',
+        component: () => import('@/views/ApiConfigs.vue'),
+        meta: { requiresAdmin: true }
+      },
+      {
         path: 'users',
         name: 'Users',
         component: () => import('@/views/Users.vue'),

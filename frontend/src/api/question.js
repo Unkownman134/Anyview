@@ -24,7 +24,7 @@ export function createQuestion(data) {
 
 export function updateQuestion(id, data) {
   return request({
-    url: `/questions/${id}`,
+    url: '/questions/update',
     method: 'put',
     data
   })

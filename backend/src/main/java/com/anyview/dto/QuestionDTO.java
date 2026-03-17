@@ -8,6 +8,11 @@ public class QuestionDTO {
     private Long id;
     private String title;
     private String description;
+    private String options;
+    private String answer;
+    private Integer score;
+    private String analysis;
+    private String templateCode;
     private String sampleInput;
     private String sampleOutput;
     private String testCases;
@@ -45,6 +50,46 @@ public class QuestionDTO {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getOptions() {
+        return options;
+    }
+
+    public void setOptions(String options) {
+        this.options = options;
+    }
+
+    public String getAnswer() {
+        return answer;
+    }
+
+    public void setAnswer(String answer) {
+        this.answer = answer;
+    }
+
+    public Integer getScore() {
+        return score;
+    }
+
+    public void setScore(Integer score) {
+        this.score = score;
+    }
+
+    public String getAnalysis() {
+        return analysis;
+    }
+
+    public void setAnalysis(String analysis) {
+        this.analysis = analysis;
+    }
+
+    public String getTemplateCode() {
+        return templateCode;
+    }
+
+    public void setTemplateCode(String templateCode) {
+        this.templateCode = templateCode;
     }
 
     public String getSampleInput() {
