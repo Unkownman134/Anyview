@@ -31,6 +31,7 @@ public class AssignmentService {
     private static final String ASSIGNMENTS_LIST_PREFIX = "assignments:";
     private static final int CACHE_TIMEOUT = 10;
 
+    @SuppressWarnings("unchecked")
     public List<Assignment> getAssignments() {
         String key = ASSIGNMENTS_LIST_PREFIX + "all";
         Object cachedAssignments = redisUtil.get(key);
@@ -56,6 +57,7 @@ public class AssignmentService {
         return assignment;
     }
 
+    @SuppressWarnings("unchecked")
     public List<Assignment> getAssignmentsByTeacherId(Long teacherId) {
         String key = ASSIGNMENTS_LIST_PREFIX + "teacher:" + teacherId;
         Object cachedAssignments = redisUtil.get(key);
@@ -67,6 +69,7 @@ public class AssignmentService {
         return assignments;
     }
 
+    @SuppressWarnings("unchecked")
     public List<Assignment> getPublishedAssignments() {
         String key = ASSIGNMENTS_LIST_PREFIX + "published";
         Object cachedAssignments = redisUtil.get(key);
@@ -269,6 +272,7 @@ public class AssignmentService {
         return savedAssignment;
     }
 
+    @SuppressWarnings("unchecked")
     public List<Assignment> getAssignmentsByClassId(Long classId) {
         String key = ASSIGNMENTS_LIST_PREFIX + "class:" + classId;
         Object cachedAssignments = redisUtil.get(key);

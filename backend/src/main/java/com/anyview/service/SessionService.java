@@ -62,6 +62,7 @@ public class SessionService {
         saveSession(userId, sessionData);
     }
     
+    @SuppressWarnings("unchecked")
     public void updateLastActivity(String userId) {
         Object sessionData = getSession(userId);
         if (sessionData instanceof Map) {
@@ -71,6 +72,7 @@ public class SessionService {
         }
     }
     
+    @SuppressWarnings("unchecked")
     public long getSessionAge(String userId) {
         Object sessionData = getSession(userId);
         if (sessionData instanceof Map) {
