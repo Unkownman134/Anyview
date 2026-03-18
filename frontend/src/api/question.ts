@@ -14,7 +14,7 @@ export function getPublicQuestions() {
   })
 }
 
-export function createQuestion(data) {
+export function createQuestion(data: any) {
   return request({
     url: '/questions',
     method: 'post',
@@ -22,7 +22,7 @@ export function createQuestion(data) {
   })
 }
 
-export function updateQuestion(id, data) {
+export function updateQuestion(_id: number, data: any) {
   return request({
     url: '/questions/update',
     method: 'put',
@@ -30,7 +30,7 @@ export function updateQuestion(id, data) {
   })
 }
 
-export function deleteQuestion(id) {
+export function deleteQuestion(id: number) {
   return request({
     url: `/questions/${id}`,
     method: 'delete'

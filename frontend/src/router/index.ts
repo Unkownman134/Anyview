@@ -1,7 +1,14 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import { useUserStore } from '@/store/user'
 
-const routes = [
+declare module 'vue-router' {
+  interface RouteMeta {
+    requiresAdmin?: boolean
+    requiresTeacher?: boolean
+  }
+}
+
+const routes: RouteRecordRaw[] = [
   {
     path: '/login',
     name: 'Login',
@@ -71,7 +78,7 @@ const router = createRouter({
   routes
 })
 
-router.beforeEach(async (to, from, next) => {
+router.beforeEach((to, _from, next) => {
   const userStore = useUserStore()
   const token = userStore.token
 

@@ -21,14 +21,14 @@ export function getActiveApiConfig() {
   })
 }
 
-export function getApiConfigById(id) {
+export function getApiConfigById(id: number) {
   return request({
     url: `/api-configs/${id}`,
     method: 'get'
   })
 }
 
-export function createApiConfig(data) {
+export function createApiConfig(data: any) {
   return request({
     url: '/api-configs',
     method: 'post',
@@ -36,7 +36,7 @@ export function createApiConfig(data) {
   })
 }
 
-export function updateApiConfig(id, data) {
+export function updateApiConfig(id: number, data: any) {
   return request({
     url: `/api-configs/${id}`,
     method: 'put',
@@ -44,21 +44,21 @@ export function updateApiConfig(id, data) {
   })
 }
 
-export function toggleApiConfig(id) {
+export function toggleApiConfig(id: number) {
   return request({
     url: `/api-configs/${id}/toggle`,
     method: 'put'
   })
 }
 
-export function deleteApiConfig(id) {
+export function deleteApiConfig(id: number) {
   return request({
     url: `/api-configs/${id}`,
     method: 'delete'
   })
 }
 
-export function testApiConnection(data) {
+export function testApiConnection(data: any) {
   return request({
     url: '/api-configs/test',
     method: 'post',

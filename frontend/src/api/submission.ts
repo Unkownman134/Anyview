@@ -7,21 +7,21 @@ export function getSubmissions() {
   })
 }
 
-export function getStudentSubmissions(studentId) {
+export function getStudentSubmissions(studentId: number) {
   return request({
     url: `/submissions/student/${studentId}`,
     method: 'get'
   })
 }
 
-export function getAssignmentSubmissions(assignmentId) {
+export function getAssignmentSubmissions(assignmentId: number) {
   return request({
     url: `/submissions/assignment/${assignmentId}`,
     method: 'get'
   })
 }
 
-export function createSubmission(data) {
+export function createSubmission(data: any) {
   return request({
     url: '/submissions',
     method: 'post',
@@ -29,7 +29,7 @@ export function createSubmission(data) {
   })
 }
 
-export function gradeSubmission(id, data) {
+export function gradeSubmission(id: number, data: any) {
   return request({
     url: `/submissions/${id}/grade`,
     method: 'post',
@@ -37,7 +37,7 @@ export function gradeSubmission(id, data) {
   })
 }
 
-export function getSubmissionById(id) {
+export function getSubmissionById(id: number) {
   return request({
     url: `/submissions/${id}`,
     method: 'get'

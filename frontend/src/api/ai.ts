@@ -1,6 +1,6 @@
 import request from './request'
 
-export function analyzeCode(data) {
+export function analyzeCode(data: any) {
   return request({
     url: '/ai/analyze',
     method: 'post',
@@ -8,7 +8,7 @@ export function analyzeCode(data) {
   })
 }
 
-export function gradeCode(data) {
+export function gradeCode(data: any) {
   return request({
     url: '/ai/grade',
     method: 'post',
@@ -16,7 +16,7 @@ export function gradeCode(data) {
   })
 }
 
-export function generateFeedback(data) {
+export function generateFeedback(data: any) {
   return request({
     url: '/ai/feedback',
     method: 'post',

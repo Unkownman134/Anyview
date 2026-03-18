@@ -14,14 +14,14 @@ export function getEnabledSchools() {
   })
 }
 
-export function getSchoolById(id) {
+export function getSchoolById(id: number) {
   return request({
     url: `/schools/${id}`,
     method: 'get'
   })
 }
 
-export function createSchool(data) {
+export function createSchool(data: any) {
   return request({
     url: '/schools',
     method: 'post',
@@ -29,7 +29,7 @@ export function createSchool(data) {
   })
 }
 
-export function updateSchool(id, data) {
+export function updateSchool(id: number, data: any) {
   return request({
     url: `/schools/${id}`,
     method: 'put',
@@ -37,14 +37,14 @@ export function updateSchool(id, data) {
   })
 }
 
-export function deleteSchool(id) {
+export function deleteSchool(id: number) {
   return request({
     url: `/schools/${id}`,
     method: 'delete'
   })
 }
 
-export function enableSchool(id, enabled) {
+export function enableSchool(id: number, enabled: boolean) {
   return request({
     url: `/schools/${id}/enable`,
     method: 'put',

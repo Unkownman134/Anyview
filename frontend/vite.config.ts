@@ -11,12 +11,12 @@ export default defineConfig({
       configureServer(server) {
         server.middlewares.use((req, res, next) => {
           // 如果是API请求，跳过（只匹配/api/，不匹配/api-configs）
-          if (req.url.startsWith('/api/')) {
+          if (req.url?.startsWith('/api/')) {
             next()
             return
           }
           // 如果是静态资源请求，跳过
-          if (req.url.startsWith('/@') || req.url.includes('.')) {
+          if (req.url?.startsWith('/@') || req.url?.includes('.')) {
             next()
             return
           }

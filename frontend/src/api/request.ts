@@ -1,16 +1,17 @@
-import axios from 'axios'
+import axios, { AxiosInstance } from 'axios'
 import { ElMessage } from 'element-plus'
 import { useUserStore } from '@/store/user'
 
-const request = axios.create({
+const request: AxiosInstance = axios.create({
   baseURL: '/api',
   timeout: 10000
 })
 
 request.interceptors.request.use(
-  config => {
+  (config: any) => {
     const userStore = useUserStore()
     if (userStore.token) {
+      config.headers = config.headers || {}
       config.headers.Authorization = `Bearer ${userStore.token}`
     }
     return config
@@ -21,7 +22,7 @@ request.interceptors.request.use(
 )
 
 request.interceptors.response.use(
-  response => {
+  (response: any) => {
     return response.data
   },
   error => {
@@ -43,7 +44,7 @@ request.interceptors.response.use(
           ElMessage.error('服务器错误')
           break
         default:
-          ElMessage.error(error.response.data.message || '请求失败')
+          ElMessage.error(error.response.data?.message || '请求失败')
       }
     } else {
       ElMessage.error('网络错误')

@@ -7,7 +7,7 @@ export function getClasses() {
   })
 }
 
-export function createClass(data) {
+export function createClass(data: any) {
   return request({
     url: '/classes',
     method: 'post',
@@ -15,7 +15,7 @@ export function createClass(data) {
   })
 }
 
-export function updateClass(id, data) {
+export function updateClass(id: number, data: any) {
   return request({
     url: `/classes/${id}`,
     method: 'put',
@@ -23,21 +23,21 @@ export function updateClass(id, data) {
   })
 }
 
-export function deleteClass(id) {
+export function deleteClass(id: number) {
   return request({
     url: `/classes/${id}`,
     method: 'delete'
   })
 }
 
-export function addStudentToClass(classId, studentId) {
+export function addStudentToClass(classId: number, studentId: number) {
   return request({
     url: `/classes/${classId}/students/${studentId}`,
     method: 'post'
   })
 }
 
-export function addStudentsToClass(classId, studentIds) {
+export function addStudentsToClass(classId: number, studentIds: number[]) {
   return request({
     url: `/classes/${classId}/students/batch`,
     method: 'post',
@@ -45,14 +45,14 @@ export function addStudentsToClass(classId, studentIds) {
   })
 }
 
-export function removeStudentFromClass(classId, studentId) {
+export function removeStudentFromClass(classId: number, studentId: number) {
   return request({
     url: `/classes/${classId}/students/${studentId}`,
     method: 'delete'
   })
 }
 
-export function getClassStudents(classId) {
+export function getClassStudents(classId: number) {
   return request({
     url: `/classes/${classId}/students`,
     method: 'get'
