@@ -3,22 +3,22 @@
     <el-row :gutter="20">
       <el-col :span="6">
         <el-card class="stat-card">
-          <el-statistic title="总用户数" :value="stats.totalUsers" />
+          <el-statistic :title="t('dashboard.totalUsers')" :value="stats.totalUsers" />
         </el-card>
       </el-col>
       <el-col :span="6">
         <el-card class="stat-card">
-          <el-statistic title="总班级数" :value="stats.totalClasses" />
+          <el-statistic :title="t('dashboard.totalClasses')" :value="stats.totalClasses" />
         </el-card>
       </el-col>
       <el-col :span="6">
         <el-card class="stat-card">
-          <el-statistic title="总题目数" :value="stats.totalQuestions" />
+          <el-statistic :title="t('dashboard.totalQuestions')" :value="stats.totalQuestions" />
         </el-card>
       </el-col>
       <el-col :span="6">
         <el-card class="stat-card">
-          <el-statistic title="总作业数" :value="stats.totalAssignments" />
+          <el-statistic :title="t('dashboard.totalAssignments')" :value="stats.totalAssignments" />
         </el-card>
       </el-col>
     </el-row>
@@ -28,29 +28,29 @@
         <el-card>
           <template #header>
             <div class="card-header">
-              <span>欢迎使用 AnyView 编程实训平台</span>
+              <span>{{ t('dashboard.welcome') }}</span>
             </div>
           </template>
           <div class="welcome-content">
-            <h3>平台功能介绍</h3>
+            <h3>{{ t('dashboard.title') }}</h3>
             <ul v-if="user?.role === 'ADMIN'">
-              <li>用户管理：管理所有用户账号和权限</li>
-              <li>学校管理：管理学校信息</li>
-              <li>API配置：配置AI评分接口</li>
-              <li>查看统计：查看平台整体数据</li>
+              <li>{{ t('dashboard.admin.1') }}</li>
+              <li>{{ t('dashboard.admin.2') }}</li>
+              <li>{{ t('dashboard.admin.3') }}</li>
+              <li>{{ t('dashboard.admin.4') }}</li>
             </ul>
             <ul v-else-if="user?.role === 'TEACHER'">
-              <li>班级管理：创建班级，管理学生</li>
-              <li>题库管理：创建和管理编程题目</li>
-              <li>作业管理：组题发布作业</li>
-              <li>批改作业：查看学生提交并评分</li>
-              <li>AI辅助：智能代码分析和批改</li>
+              <li>{{ t('dashboard.teacher.1') }}</li>
+              <li>{{ t('dashboard.teacher.2') }}</li>
+              <li>{{ t('dashboard.teacher.3') }}</li>
+              <li>{{ t('dashboard.teacher.4') }}</li>
+              <li>{{ t('dashboard.teacher.5') }}</li>
             </ul>
             <ul v-else-if="user?.role === 'STUDENT'">
-              <li>查看作业：查看老师发布的作业</li>
-              <li>提交作业：在线编写并提交代码</li>
-              <li>查看成绩：查看作业评分和反馈</li>
-              <li>AI反馈：获得智能代码建议</li>
+              <li>{{ t('dashboard.student.1') }}</li>
+              <li>{{ t('dashboard.student.2') }}</li>
+              <li>{{ t('dashboard.student.3') }}</li>
+              <li>{{ t('dashboard.student.4') }}</li>
             </ul>
           </div>
         </el-card>
@@ -63,9 +63,11 @@
 import { reactive, onMounted, computed } from 'vue'
 import { useUserStore } from '@/store/user'
 import { getOverallStatistics } from '@/api/statistics'
+import { useI18n } from 'vue-i18n'
 
 const userStore = useUserStore()
 const user = computed(() => userStore.user)
+const { t } = useI18n()
 
 const stats = reactive({
   totalUsers: 0,

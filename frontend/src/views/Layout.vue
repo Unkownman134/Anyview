@@ -11,39 +11,39 @@
       >
         <el-menu-item index="/dashboard">
           <el-icon><HomeFilled /></el-icon>
-          <span>首页</span>
+          <span>{{ $t('menu.home') }}</span>
         </el-menu-item>
         <el-menu-item v-if="isTeacher || isAdmin" index="/classes">
           <el-icon><School /></el-icon>
-          <span>班级管理</span>
+          <span>{{ $t('menu.classes') }}</span>
         </el-menu-item>
         <el-menu-item v-if="isTeacher || isAdmin" index="/questions">
           <el-icon><Document /></el-icon>
-          <span>题库管理</span>
+          <span>{{ $t('menu.questions') }}</span>
         </el-menu-item>
         <el-menu-item v-if="isTeacher || isAdmin" index="/assignments">
           <el-icon><Edit /></el-icon>
-          <span>作业管理</span>
+          <span>{{ $t('menu.assignments') }}</span>
         </el-menu-item>
         <el-menu-item v-if="isStudent" index="/assignments">
           <el-icon><Edit /></el-icon>
-          <span>作业列表</span>
+          <span>{{ $t('menu.assignmentList') }}</span>
         </el-menu-item>
         <el-menu-item index="/submissions">
           <el-icon><Tickets /></el-icon>
-          <span>提交记录</span>
+          <span>{{ $t('menu.submissions') }}</span>
         </el-menu-item>
         <el-menu-item v-if="isAdmin" index="/api-configs">
           <el-icon><Setting /></el-icon>
-          <span>API管理</span>
+          <span>{{ $t('menu.apiConfig') }}</span>
         </el-menu-item>
         <el-menu-item v-if="isAdmin" index="/users">
           <el-icon><User /></el-icon>
-          <span>用户管理</span>
+          <span>{{ $t('menu.users') }}</span>
         </el-menu-item>
         <el-menu-item v-if="isAdmin" index="/schools">
           <el-icon><School /></el-icon>
-          <span>学校管理</span>
+          <span>{{ $t('menu.schools') }}</span>
         </el-menu-item>
       </el-menu>
     </el-aside>
@@ -51,6 +51,7 @@
       <el-header>
         <div class="header-content">
           <span>{{ userStore.user?.realName }} ({{ userStore.user?.role }})</span>
+          <LanguageSwitcher />
           <el-button @click="toggleDarkMode" circle>
             <el-icon v-if="!isDark"><Moon /></el-icon>
             <el-icon v-else><Sunny /></el-icon>
@@ -61,7 +62,7 @@
             </span>
             <template #dropdown>
               <el-dropdown-menu>
-                <el-dropdown-item command="logout">退出登录</el-dropdown-item>
+                <el-dropdown-item command="logout">{{ $t('common.logout') }}</el-dropdown-item>
               </el-dropdown-menu>
             </template>
           </el-dropdown>
@@ -79,15 +80,16 @@ import { computed, ref, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useUserStore } from '@/store/user'
 import { ElMessage } from 'element-plus'
+import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
+import { useI18n } from 'vue-i18n'
 
 const router = useRouter()
 const route = useRoute()
 const userStore = useUserStore()
+const { t } = useI18n()
 
-// 暗黑模式状态
 const isDark = ref(false)
 
-// 切换暗黑模式
 const toggleDarkMode = () => {
   isDark.value = !isDark.value
   const html = document.documentElement
@@ -100,7 +102,6 @@ const toggleDarkMode = () => {
   }
 }
 
-// 初始化主题
 onMounted(() => {
   const savedTheme = localStorage.getItem('theme')
   if (savedTheme === 'dark') {
@@ -120,7 +121,7 @@ const isStudent = computed(() => userStore.user?.role === 'STUDENT')
 const handleCommand = (command) => {
   if (command === 'logout') {
     userStore.logout()
-    ElMessage.success('退出成功')
+    ElMessage.success(t('common.success'))
     router.push('/login')
   }
 }

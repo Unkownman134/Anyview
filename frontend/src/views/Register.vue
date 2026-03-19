@@ -1,35 +1,68 @@
 <template>
-  <div class="register-container">
-    <el-card class="register-card">
-      <template #header>
-        <div class="card-header">
-          <h2>AnyView 注册</h2>
-        </div>
-      </template>
-      <el-form :model="registerForm" :rules="rules" ref="registerFormRef" label-width="80px">
-        <el-form-item label="用户名" prop="username">
-          <el-input v-model="registerForm.username" placeholder="请输入用户名" />
+  <div class="login-container" :class="{ 'dark-mode': isDarkMode }">
+    <div class="login-content">
+      <div class="logo">
+        <h1>Anyview<span class="platform-name">{{ t('login.title') }}</span></h1>
+        <div class="version">{{ version }}</div>
+      </div>
+      
+      <el-form :model="registerForm" :rules="rules" ref="registerFormRef" class="login-form">
+        <el-form-item prop="username">
+          <el-input 
+            v-model="registerForm.username" 
+            :placeholder="t('register.username')" 
+            prefix-icon="User"
+          />
         </el-form-item>
-        <el-form-item label="密码" prop="password">
-          <el-input v-model="registerForm.password" type="password" placeholder="请输入密码" />
+        <el-form-item prop="password">
+          <el-input 
+            v-model="registerForm.password" 
+            type="password" 
+            :placeholder="t('register.password')" 
+            prefix-icon="Lock"
+          />
         </el-form-item>
-        <el-form-item label="确认密码" prop="confirmPassword">
-          <el-input v-model="registerForm.confirmPassword" type="password" placeholder="请再次输入密码" />
+        <el-form-item prop="confirmPassword">
+          <el-input 
+            v-model="registerForm.confirmPassword" 
+            type="password" 
+            :placeholder="t('register.confirmPassword')" 
+            prefix-icon="Lock"
+          />
         </el-form-item>
-        <el-form-item label="邮箱" prop="email">
-          <el-input v-model="registerForm.email" placeholder="请输入邮箱" />
+        <el-form-item prop="email">
+          <el-input 
+            v-model="registerForm.email" 
+            :placeholder="t('register.email')" 
+            prefix-icon="Message"
+          />
         </el-form-item>
-        <el-form-item label="姓名" prop="realName">
-          <el-input v-model="registerForm.realName" placeholder="请输入真实姓名" />
+        <el-form-item prop="realName">
+          <el-input 
+            v-model="registerForm.realName" 
+            :placeholder="t('register.realName')" 
+            prefix-icon="Avatar"
+          />
         </el-form-item>
-        <el-form-item label="角色" prop="role">
-          <el-select v-model="registerForm.role" placeholder="请选择角色" style="width: 100%">
-            <el-option label="学生" value="STUDENT" />
-            <el-option label="教师" value="TEACHER" />
+        <el-form-item prop="role">
+          <el-select 
+            v-model="registerForm.role" 
+            :placeholder="t('register.role')" 
+            prefix-icon="UserFilled"
+            class="school-select"
+          >
+            <el-option :label="t('register.student')" value="STUDENT" />
+            <el-option :label="t('register.teacher')" value="TEACHER" />
           </el-select>
         </el-form-item>
-        <el-form-item label="学校" prop="schoolId">
-          <el-select v-model="registerForm.schoolId" placeholder="请选择学校" style="width: 100%" :loading="schoolLoading">
+        <el-form-item prop="schoolId">
+          <el-select 
+            v-model="registerForm.schoolId" 
+            :placeholder="t('register.school')" 
+            prefix-icon="Location"
+            class="school-select"
+            :loading="schoolLoading"
+          >
             <el-option 
               v-for="school in schools" 
               :key="school.id" 
@@ -39,13 +72,25 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="handleRegister" style="width: 100%">注册</el-button>
+          <el-button type="primary" @click="handleRegister" class="login-button">{{ t('common.register') }}</el-button>
         </el-form-item>
-        <el-form-item>
-          <el-link type="primary" @click="$router.push('/login')">已有账号？立即登录</el-link>
-        </el-form-item>
+        <div class="form-footer">
+          <el-button 
+            :icon="isDarkMode ? 'Sunny' : 'Moon'" 
+            @click="toggleDarkMode"
+            class="theme-toggle"
+          />
+        </div>
       </el-form>
-    </el-card>
+      
+      <div class="register-link">
+        <el-link type="primary" @click="$router.push('/login')">{{ t('register.hasAccount') }} {{ t('register.loginNow') }}</el-link>
+      </div>
+    </div>
+    
+    <div class="footer">
+      Anyview {{ t('login.title') }} - 智能化编程学习解决方案
+    </div>
   </div>
 </template>
 
@@ -55,11 +100,16 @@ import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import { register } from '@/api/auth'
 import { getEnabledSchools } from '@/api/school'
+import { useI18n } from 'vue-i18n'
+import packageInfo from '../../package.json'
 
 const router = useRouter()
 const registerFormRef = ref()
 const schools = ref([])
 const schoolLoading = ref(false)
+const isDarkMode = ref(false)
+const version = ref(`v${packageInfo.version}`)
+const { t } = useI18n()
 
 const registerForm = reactive({
   username: '',
@@ -118,36 +168,199 @@ const handleRegister = async () => {
     if (valid) {
       try {
         await register(registerForm)
-        ElMessage.success('注册成功，请登录')
+        ElMessage.success(t('register.registerSuccess'))
         router.push('/login')
       } catch (error) {
-        ElMessage.error(error.message || '注册失败')
+        ElMessage.error(error.message || t('register.registerFailed'))
       }
     }
   })
 }
 
+const toggleDarkMode = () => {
+  isDarkMode.value = !isDarkMode.value
+  document.documentElement.classList.toggle('dark-mode', isDarkMode.value)
+}
+
 onMounted(() => {
   loadSchools()
+  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    toggleDarkMode()
+  }
 })
 </script>
 
+<style>
+/* 全局暗黑模式样式 */
+:root {
+  --primary-color: #409EFF;
+  --background-color: #ffffff;
+  --text-color: #333333;
+  --border-color: #dcdfe6;
+  --card-background: #ffffff;
+  --footer-background: #409EFF;
+  --footer-text: #ffffff;
+}
+
+.dark-mode {
+  --primary-color: #409EFF;
+  --background-color: #1a1a1a;
+  --text-color: #ffffff;
+  --border-color: #333333;
+  --card-background: #2a2a2a;
+  --footer-background: #2c3e50;
+  --footer-text: #ffffff;
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* 调整 Element Plus 组件样式 */
+.el-input__wrapper {
+  background-color: var(--card-background) !important;
+  border-color: var(--border-color) !important;
+}
+
+.el-input__inner {
+  color: var(--text-color) !important;
+}
+
+.el-select__wrapper {
+  background-color: var(--card-background) !important;
+  border-color: var(--border-color) !important;
+}
+
+.el-select__placeholder {
+  color: #909399 !important;
+}
+
+.el-select__input {
+  color: var(--text-color) !important;
+}
+
+.el-option {
+  background-color: var(--card-background) !important;
+  color: var(--text-color) !important;
+}
+
+.el-option:hover {
+  background-color: #f5f7fa !important;
+}
+
+.dark-mode .el-option:hover {
+  background-color: #3a3a3a !important;
+}
+</style>
+
 <style scoped>
-.register-container {
+.login-container {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
+  justify-content: center;
   height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-color: var(--background-color);
+  transition: background-color 0.3s;
 }
 
-.register-card {
+.login-content {
   width: 400px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 20px;
 }
 
-.card-header h2 {
-  margin: 0;
+.logo {
   text-align: center;
+  margin-bottom: 40px;
+}
+
+.logo h1 {
+  font-size: 36px;
+  font-weight: bold;
+  margin: 0;
+  color: var(--primary-color);
+  white-space: nowrap;
+}
+
+.logo .platform-name {
   color: #333;
+  margin-left: 5px;
+}
+
+.dark-mode .logo .platform-name {
+  color: #ffffff;
+}
+
+.version {
+  font-size: 14px;
+  color: #999;
+}
+
+.dark-mode .version {
+  color: #999999;
+}
+
+.login-form {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.school-select {
+  width: 100%;
+}
+
+.login-button {
+  width: 100%;
+  height: 40px;
+  font-size: 16px;
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.form-footer {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-top: 15px;
+}
+
+.theme-toggle {
+  margin-left: auto;
+  border-radius: 8px;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+}
+
+.register-link {
+  margin-top: 20px;
+}
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  text-align: center;
+  padding: 15px 0;
+  background-color: var(--footer-background);
+  color: var(--footer-text);
+  font-size: 14px;
+}
+
+/* 响应式设计 */
+@media (max-width: 480px) {
+  .login-content {
+    width: 90%;
+    padding: 20px 10px;
+  }
+  
+  .logo h1 {
+    font-size: 28px;
+  }
 }
 </style>

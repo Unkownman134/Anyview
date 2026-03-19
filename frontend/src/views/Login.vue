@@ -2,7 +2,7 @@
   <div class="login-container" :class="{ 'dark-mode': isDarkMode }">
     <div class="login-content">
       <div class="logo">
-        <h1>Anyview<span class="platform-name">编程实训平台</span></h1>
+        <h1>Anyview<span class="platform-name">{{ t('login.title') }}</span></h1>
         <div class="client-type-container">
           <div class="client-type" :class="{ 'scrolling': isScrolling }">
             {{ currentRole }}
@@ -15,7 +15,7 @@
         <el-form-item prop="username">
           <el-input 
             v-model="loginForm.username" 
-            placeholder="请输入账号" 
+            :placeholder="t('login.username')" 
             prefix-icon="User"
             @input="handleUsernameInput"
           />
@@ -24,14 +24,14 @@
           <el-input 
             v-model="loginForm.password" 
             type="password" 
-            placeholder="请输入密码" 
+            :placeholder="t('login.password')" 
             prefix-icon="Lock"
           />
         </el-form-item>
         <el-form-item v-if="showSchoolSelect">
           <el-select 
             v-model="loginForm.school" 
-            placeholder="选择学校" 
+            :placeholder="t('register.school')" 
             prefix-icon="Location"
             class="school-select"
             :loading="schoolLoading"
@@ -45,10 +45,10 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="handleLogin" class="login-button">登录</el-button>
+          <el-button type="primary" @click="handleLogin" class="login-button">{{ t('common.login') }}</el-button>
         </el-form-item>
         <div class="form-footer">
-          <el-link type="info" @click="handleForgotPassword">忘记密码</el-link>
+          <el-link type="info" @click="handleForgotPassword">{{ t('login.rememberMe') }}</el-link>
           <el-button 
             :icon="isDarkMode ? 'Sunny' : 'Moon'" 
             @click="toggleDarkMode"
@@ -58,22 +58,22 @@
       </el-form>
       
       <div class="register-link">
-        <el-link type="primary" @click="$router.push('/register')">还没有账号？立即注册</el-link>
+        <el-link type="primary" @click="$router.push('/register')">{{ t('login.noAccount') }} {{ t('login.registerNow') }}</el-link>
       </div>
     </div>
     
     <div class="footer">
-      Anyview 编程实训平台 - 智能化编程学习解决方案
+      Anyview {{ t('login.title') }} - 智能化编程学习解决方案
     </div>
     
-    <el-dialog v-model="showForgotPasswordDialog" title="忘记密码" width="400px">
+    <el-dialog v-model="showForgotPasswordDialog" :title="t('login.title')" width="400px">
       <el-form :model="forgotPasswordForm" :rules="forgotPasswordRules" ref="forgotPasswordFormRef">
         <el-form-item label="邮箱" prop="email">
           <el-input v-model="forgotPasswordForm.email" placeholder="请输入注册邮箱" />
         </el-form-item>
       </el-form>
       <template #footer>
-        <el-button @click="showForgotPasswordDialog = false">取消</el-button>
+        <el-button @click="showForgotPasswordDialog = false">{{ t('common.cancel') }}</el-button>
         <el-button type="primary" @click="handleForgotPasswordSubmit" :loading="forgotPasswordLoading">
           发送重置链接
         </el-button>
@@ -90,6 +90,7 @@ import { login } from '@/api/auth'
 import { forgotPassword } from '@/api/password'
 import { getEnabledSchools } from '@/api/school'
 import { useUserStore } from '@/store/user'
+import { useI18n } from 'vue-i18n'
 import packageInfo from '../../package.json'
 
 const router = useRouter()
@@ -102,6 +103,7 @@ const forgotPasswordFormRef = ref()
 const forgotPasswordLoading = ref(false)
 const schoolLoading = ref(false)
 const version = ref(`v${packageInfo.version}`)
+const { t } = useI18n()
 
 const loginForm = reactive({
   username: '',
@@ -179,10 +181,10 @@ const handleLogin = async () => {
         const res = await login(loginData)
         userStore.setToken(res.data.token)
         userStore.setUser(res.data)
-        ElMessage.success('登录成功')
+        ElMessage.success(t('login.loginSuccess'))
         router.push('/dashboard')
       } catch (error) {
-        ElMessage.error(error.message || '登录失败')
+        ElMessage.error(error.message || t('login.loginFailed'))
       }
     }
   })
