@@ -49,11 +49,14 @@
         </el-form-item>
         <div class="form-footer">
           <el-link type="info" @click="handleForgotPassword">{{ t('login.rememberMe') }}</el-link>
-          <el-button 
-            :icon="isDarkMode ? 'Sunny' : 'Moon'" 
-            @click="toggleDarkMode"
-            class="theme-toggle"
-          />
+          <div class="right-actions">
+            <LanguageSwitcher />
+            <el-button 
+              :icon="isDarkMode ? 'Sunny' : 'Moon'" 
+              @click="toggleDarkMode"
+              class="theme-toggle"
+            />
+          </div>
         </div>
       </el-form>
       
@@ -91,6 +94,7 @@ import { forgotPassword } from '@/api/password'
 import { getEnabledSchools } from '@/api/school'
 import { useUserStore } from '@/store/user'
 import { useI18n } from 'vue-i18n'
+import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
 import packageInfo from '../../package.json'
 
 const router = useRouter()
@@ -398,8 +402,13 @@ body {
   margin-top: 15px;
 }
 
+.right-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .theme-toggle {
-  margin-left: auto;
   border-radius: 8px;
   width: 36px;
   height: 36px;

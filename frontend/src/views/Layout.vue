@@ -45,6 +45,10 @@
           <el-icon><School /></el-icon>
           <span>{{ $t('menu.schools') }}</span>
         </el-menu-item>
+        <el-menu-item v-if="isTeacher || isAdmin" index="/analysis">
+          <el-icon><TrendCharts /></el-icon>
+          <span>{{ $t('menu.analysis') }}</span>
+        </el-menu-item>
       </el-menu>
     </el-aside>
     <el-container>

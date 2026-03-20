@@ -58,3 +58,11 @@ export function getClassStudents(classId: number) {
     method: 'get'
   })
 }
+
+export function getClassList(params?: any) {
+  return request({
+    url: '/classes',
+    method: 'get',
+    params
+  })
+}

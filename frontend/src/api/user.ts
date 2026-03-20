@@ -50,3 +50,11 @@ export function enableUser(id: number, enabled: boolean) {
     data: { enabled }
   })
 }
+
+export function getUserList(params?: any) {
+  return request({
+    url: '/users',
+    method: 'get',
+    params
+  })
+}

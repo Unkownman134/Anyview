@@ -68,6 +68,12 @@ const routes: RouteRecordRaw[] = [
         name: 'Schools',
         component: () => import('@/views/Schools.vue'),
         meta: { requiresAdmin: true }
+      },
+      {
+        path: 'analysis',
+        name: 'DataAnalysis',
+        component: () => import('@/views/DataAnalysis.vue'),
+        meta: { requiresTeacher: true }
       }
     ]
   }

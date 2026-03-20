@@ -75,11 +75,14 @@
           <el-button type="primary" @click="handleRegister" class="login-button">{{ t('common.register') }}</el-button>
         </el-form-item>
         <div class="form-footer">
-          <el-button 
-            :icon="isDarkMode ? 'Sunny' : 'Moon'" 
-            @click="toggleDarkMode"
-            class="theme-toggle"
-          />
+          <div class="right-actions">
+            <LanguageSwitcher />
+            <el-button 
+              :icon="isDarkMode ? 'Sunny' : 'Moon'" 
+              @click="toggleDarkMode"
+              class="theme-toggle"
+            />
+          </div>
         </div>
       </el-form>
       
@@ -101,6 +104,7 @@ import { ElMessage } from 'element-plus'
 import { register } from '@/api/auth'
 import { getEnabledSchools } from '@/api/school'
 import { useI18n } from 'vue-i18n'
+import LanguageSwitcher from '@/components/LanguageSwitcher.vue'
 import packageInfo from '../../package.json'
 
 const router = useRouter()
@@ -329,8 +333,13 @@ body {
   margin-top: 15px;
 }
 
+.right-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .theme-toggle {
-  margin-left: auto;
   border-radius: 8px;
   width: 36px;
   height: 36px;

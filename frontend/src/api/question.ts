@@ -36,3 +36,11 @@ export function deleteQuestion(id: number) {
     method: 'delete'
   })
 }
+
+export function getQuestionList(params?: any) {
+  return request({
+    url: '/questions',
+    method: 'get',
+    params
+  })
+}

@@ -28,7 +28,8 @@ export default {
     submissions: 'Submissions',
     apiConfig: 'API Config',
     users: 'Users',
-    schools: 'Schools'
+    schools: 'Schools',
+    analysis: 'Data Analysis'
   },
   login: {
     title: 'Programming Training Platform',

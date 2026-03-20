@@ -28,7 +28,8 @@ export default {
     submissions: '提交记录',
     apiConfig: 'API管理',
     users: '用户管理',
-    schools: '学校管理'
+    schools: '学校管理',
+    analysis: '数据分析'
   },
   login: {
     title: '编程实训平台',
