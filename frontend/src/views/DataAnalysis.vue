@@ -4,7 +4,7 @@
       <el-tab-pane label="系统概览" name="system">
         <SystemOverview v-if="activeTab === 'system'" />
       </el-tab-pane>
-      <el-tab-pane label="用户分析" name="user">
+      <el-tab-pane label="学生分析" name="user">
         <UserAnalysis v-if="activeTab === 'user'" />
       </el-tab-pane>
       <el-tab-pane label="题目分析" name="question">

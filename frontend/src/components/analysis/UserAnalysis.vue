@@ -102,7 +102,7 @@
 import { ref, onMounted, onUnmounted, nextTick, computed } from 'vue'
 import * as echarts from 'echarts'
 import { getUserAnalysis } from '../../api/analysis'
-import { getUsers } from '../../api/user'
+import { getUsersByRole } from '../../api/user'
 import { ElMessage } from 'element-plus'
 
 const selectedUser = ref<number | null>(null)
@@ -111,8 +111,8 @@ const userOptions = ref<any[]>([])
 const analysisData = ref<any>(null)
 const progressFilter = ref('all')
 
-let activityTrendChart: echarts.ECharts | null = null
-let difficultyChart: echarts.ECharts | null = null
+const activityTrendChart = ref<echarts.ECharts | null>(null)
+const difficultyChart = ref<echarts.ECharts | null>(null)
 
 const activityTrendChartRef = ref<HTMLElement>()
 const difficultyChartRef = ref<HTMLElement>()
@@ -144,7 +144,7 @@ const searchUsers = async (query: string) => {
   if (query.length < 2) return
   searching.value = true
   try {
-    const res = await getUsers()
+    const res = await getUsersByRole('STUDENT')
     if (res.code === 200) {
       userOptions.value = res.data || []
     }
@@ -173,7 +173,7 @@ const loadUserAnalysis = async () => {
 
 const initActivityTrendChart = () => {
   if (!activityTrendChartRef.value) return
-  activityTrendChart = echarts.init(activityTrendChartRef.value)
+  activityTrendChart.value = echarts.init(activityTrendChartRef.value)
 
   const trend = analysisData.value?.activityTrend || []
   const option: any = {
@@ -201,12 +201,12 @@ const initActivityTrendChart = () => {
       }
     ]
   }
-  activityTrendChart.setOption(option)
+  activityTrendChart.value?.setOption(option)
 }
 
 const initDifficultyChart = () => {
   if (!difficultyChartRef.value) return
-  difficultyChart = echarts.init(difficultyChartRef.value)
+  difficultyChart.value = echarts.init(difficultyChartRef.value)
 
   const data = analysisData.value?.submissionsByDifficulty || {}
   const option: any = {
@@ -221,7 +221,7 @@ const initDifficultyChart = () => {
       ]
     }]
   }
-  difficultyChart.setOption(option)
+  difficultyChart.value?.setOption(option)
 }
 
 const getDifficultyType = (difficulty: string) => {
@@ -239,8 +239,8 @@ const formatDate = (dateStr: string) => {
 }
 
 const handleResize = () => {
-  activityTrendChart?.resize()
-  difficultyChart?.resize()
+  activityTrendChart.value?.resize()
+  difficultyChart.value?.resize()
 }
 
 onMounted(() => {
@@ -249,8 +249,8 @@ onMounted(() => {
 
 onUnmounted(() => {
   window.removeEventListener('resize', handleResize)
-  activityTrendChart?.dispose()
-  difficultyChart?.dispose()
+  activityTrendChart.value?.dispose()
+  difficultyChart.value?.dispose()
 })
 </script>
 

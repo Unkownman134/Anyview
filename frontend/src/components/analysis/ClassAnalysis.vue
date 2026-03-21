@@ -65,7 +65,7 @@
             <template #header>
               <span>学生排名</span>
             </template>
-            <el-table :data="analysisData.studentRankings" style="width: 100%" max-height="400">
+            <el-table :data="analysisData.studentPerformances" style="width: 100%" max-height="400">
               <el-table-column type="index" label="排名" width="70">
                 <template #default="{ $index }">
                   <el-tag v-if="$index < 3" :type="['danger', 'warning', 'success'][$index]" effect="dark">
@@ -74,9 +74,9 @@
                   <span v-else>{{ $index + 1 }}</span>
                 </template>
               </el-table-column>
-              <el-table-column prop="studentName" label="姓名" />
+              <el-table-column prop="realName" label="姓名" />
               <el-table-column prop="submissionCount" label="提交数" sortable />
-              <el-table-column prop="solvedQuestions" label="解题数" sortable />
+              <el-table-column prop="solvedCount" label="解题数" sortable />
               <el-table-column prop="averageScore" label="平均分" sortable>
                 <template #default="{ row }">
                   {{ row.averageScore?.toFixed(1) }}
@@ -90,7 +90,7 @@
             <template #header>
               <span>成绩分布</span>
             </template>
-            <div ref="scoreDistributionChart" class="chart"></div>
+            <div ref="scoreDistributionChartRef" class="chart"></div>
           </el-card>
         </el-col>
       </el-row>
@@ -145,7 +145,7 @@ const selectedClass = ref<number | null>(null)
 const classOptions = ref<any[]>([])
 const analysisData = ref<any>(null)
 
-let scoreDistributionChart: echarts.ECharts | null = null
+const scoreDistributionChart = ref<echarts.ECharts | null>(null)
 const scoreDistributionChartRef = ref<HTMLElement>()
 
 const classStats = computed(() => {
@@ -154,7 +154,7 @@ const classStats = computed(() => {
     { label: '总学生', value: analysisData.value.totalStudents, icon: markRaw(User), color: '#409EFF' },
     { label: '总提交', value: analysisData.value.totalSubmissions, icon: markRaw(Document), color: '#67C23A' },
     { label: '平均分', value: analysisData.value.averageScore?.toFixed(1), icon: markRaw(Star), color: '#E6A23C' },
-    { label: '通过率', value: analysisData.value.passRate?.toFixed(1) + '%', icon: markRaw(Check), color: '#F56C6C' }
+    { label: '通过率', value: analysisData.value.acceptanceRate?.toFixed(1) + '%', icon: markRaw(Check), color: '#F56C6C' }
   ]
 })
 
@@ -186,7 +186,7 @@ const loadClassAnalysis = async () => {
 
 const initScoreDistributionChart = () => {
   if (!scoreDistributionChartRef.value) return
-  scoreDistributionChart = echarts.init(scoreDistributionChartRef.value)
+  scoreDistributionChart.value = echarts.init(scoreDistributionChartRef.value)
 
   const data = analysisData.value?.scoreDistribution || []
   const option: any = {
@@ -207,11 +207,11 @@ const initScoreDistributionChart = () => {
       }
     }]
   }
-  scoreDistributionChart.setOption(option)
+  scoreDistributionChart.value?.setOption(option)
 }
 
 const handleResize = () => {
-  scoreDistributionChart?.resize()
+  scoreDistributionChart.value?.resize()
 }
 
 onMounted(() => {
@@ -221,7 +221,7 @@ onMounted(() => {
 
 onUnmounted(() => {
   window.removeEventListener('resize', handleResize)
-  scoreDistributionChart?.dispose()
+  scoreDistributionChart.value?.dispose()
 })
 </script>
 

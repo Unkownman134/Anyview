@@ -32,6 +32,9 @@ public class AnalysisService {
     @Autowired
     private ClassStudentRepository classStudentRepository;
 
+    @Autowired
+    private AssignmentRepository assignmentRepository;
+
     public SystemAnalysisDTO getSystemAnalysis(Integer days) {
         SystemAnalysisDTO dto = new SystemAnalysisDTO();
 
@@ -118,9 +121,18 @@ public class AnalysisService {
             dto.setAverageScore(avgScore);
         }
 
+        dto.setFailedSubmissions(submissions.stream().filter(s -> isFailedStatus(s.getStatus())).count());
+        dto.setUniqueAttemptUsers(submissions.stream().map(Submission::getStudentId).distinct().count());
+        dto.setUniqueSolvedUsers(submissions.stream()
+                .filter(s -> s.getStatus() == SubmissionStatus.ACCEPTED)
+                .map(Submission::getStudentId)
+                .distinct()
+                .count());
+
         dto.setSubmissionTrend(getQuestionSubmissionTrend(questionId, 30));
         dto.setErrorTypeStats(getQuestionErrorTypeStats(questionId));
         dto.setCommonMistakes(getQuestionCommonMistakes(questionId));
+        dto.setScoreDistribution(getQuestionScoreDistribution(submissions));
 
         return dto;
     }
@@ -147,6 +159,9 @@ public class AnalysisService {
         List<ClassStudent> classStudents = classStudentRepository.findByClassInfoId(classId);
         dto.setTotalStudents((long) classStudents.size());
 
+        List<Assignment> assignments = assignmentRepository.findByClassInfoId(classId);
+        dto.setTotalAssignments((long) assignments.size());
+
         List<Long> studentIds = classStudents.stream()
                 .map(cs -> cs.getStudent().getId())
                 .collect(Collectors.toList());
@@ -169,6 +184,12 @@ public class AnalysisService {
         dto.setStudentPerformances(getClassStudentPerformances(studentIds));
         dto.setSubmissionTrend(getClassSubmissionTrend(studentIds, 30));
         dto.setHotQuestions(getClassHotQuestions(studentIds));
+        
+        List<Map<String, Object>> scoreDistribution = getClassScoreDistribution(allSubmissions);
+        System.out.println("Score Distribution: " + scoreDistribution);
+        dto.setScoreDistribution(scoreDistribution);
+        
+        dto.setAssignmentPerformance(getClassAssignmentPerformance(classId));
 
         return dto;
     }
@@ -510,6 +531,32 @@ public class AnalysisService {
         return mistakes;
     }
 
+    private List<Map<String, Object>> getQuestionScoreDistribution(List<Submission> submissions) {
+        List<Map<String, Object>> distribution = new ArrayList<>();
+
+        if (submissions.isEmpty()) {
+            return distribution;
+        }
+
+        int[] ranges = {0, 60, 70, 80, 90, 100};
+        String[] labels = {"0-59", "60-69", "70-79", "80-89", "90-100"};
+
+        for (int i = 0; i < ranges.length - 1; i++) {
+            int lower = ranges[i];
+            int upper = ranges[i + 1];
+            long count = submissions.stream()
+                    .filter(s -> s.getScore() >= lower && s.getScore() < upper)
+                    .count();
+
+            Map<String, Object> range = new HashMap<>();
+            range.put("range", labels[i]);
+            range.put("count", count);
+            distribution.add(range);
+        }
+
+        return distribution;
+    }
+
     private List<ClassAnalysisDTO.StudentPerformance> getClassStudentPerformances(List<Long> studentIds) {
         List<ClassAnalysisDTO.StudentPerformance> performances = new ArrayList<>();
 
@@ -644,5 +691,94 @@ public class AnalysisService {
                status == SubmissionStatus.MEMORY_LIMIT_EXCEEDED ||
                status == SubmissionStatus.COMPILATION_ERROR ||
                status == SubmissionStatus.RUNTIME_ERROR;
+    }
+
+    private List<Map<String, Object>> getClassScoreDistribution(List<Submission> submissions) {
+        List<Map<String, Object>> distribution = new ArrayList<>();
+
+        if (submissions.isEmpty()) {
+            return distribution;
+        }
+
+        int[] ranges = {0, 60, 70, 80, 90, 101};
+        String[] labels = {"0-59", "60-69", "70-79", "80-89", "90-100"};
+
+        for (int i = 0; i < ranges.length - 1; i++) {
+            int lower = ranges[i];
+            int upper = ranges[i + 1];
+            long count = submissions.stream()
+                    .filter(s -> s.getScore() >= lower && s.getScore() < upper)
+                    .count();
+
+            Map<String, Object> range = new HashMap<>();
+            range.put("range", labels[i]);
+            range.put("count", count);
+            distribution.add(range);
+        }
+
+        return distribution;
+    }
+
+    private List<ClassAnalysisDTO.AssignmentPerformance> getClassAssignmentPerformance(Long classId) {
+        List<ClassAnalysisDTO.AssignmentPerformance> performances = new ArrayList<>();
+
+        List<Assignment> assignments = assignmentRepository.findByClassInfoIdWithQuestions(classId);
+
+        for (Assignment assignment : assignments) {
+            List<AssignmentQuestion> questions = assignment.getAssignmentQuestions();
+            if (questions == null || questions.isEmpty()) {
+                continue;
+            }
+
+            int totalQuestions = questions.size();
+
+            List<Long> questionIds = questions.stream()
+                    .map(AssignmentQuestion::getQuestionId)
+                    .collect(Collectors.toList());
+
+            List<Submission> submissions = questionIds.stream()
+                    .flatMap(questionId -> submissionRepository.findByQuestionId(questionId).stream())
+                    .filter(s -> {
+                        User student = userRepository.findById(s.getStudentId()).orElse(null);
+                        if (student == null) return false;
+                        List<ClassStudent> classStudents = classStudentRepository.findByStudentId(student.getId());
+                        return classStudents.stream().anyMatch(cs -> cs.getClassInfo().getId().equals(classId));
+                    })
+                    .collect(Collectors.toList());
+
+            long submissionCount = submissions.stream()
+                    .map(Submission::getStudentId)
+                    .distinct()
+                    .count();
+
+            double averageScore = submissions.isEmpty() ? 0.0 :
+                    submissions.stream()
+                            .mapToInt(Submission::getScore)
+                            .average()
+                            .orElse(0.0);
+
+            double completionRate = submissionCount == 0 ? 0.0 :
+                    (submissionCount * 100.0) / totalQuestions;
+
+            ClassAnalysisDTO.AssignmentPerformance perf = new ClassAnalysisDTO.AssignmentPerformance();
+            perf.setAssignmentId(assignment.getId());
+            perf.setAssignmentName(assignment.getTitle());
+            perf.setTotalQuestions(totalQuestions);
+            perf.setSubmissionCount(submissionCount);
+            perf.setAverageScore(averageScore);
+            perf.setCompletionRate(completionRate);
+            perf.setDeadline(assignment.getEndTime() != null ? assignment.getEndTime().toString() : null);
+
+            performances.add(perf);
+        }
+
+        performances.sort((a, b) -> {
+            if (a.getDeadline() == null && b.getDeadline() == null) return 0;
+            if (a.getDeadline() == null) return 1;
+            if (b.getDeadline() == null) return -1;
+            return b.getDeadline().compareTo(a.getDeadline());
+        });
+
+        return performances;
     }
 }

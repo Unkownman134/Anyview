@@ -23,4 +23,7 @@ public interface AssignmentRepository extends JpaRepository<Assignment, Long> {
     
     @Query("SELECT DISTINCT a FROM Assignment a LEFT JOIN FETCH a.assignmentQuestions")
     List<Assignment> findAllWithQuestions();
+    
+    @Query("SELECT DISTINCT a FROM Assignment a LEFT JOIN FETCH a.assignmentQuestions WHERE a.classId = :classId")
+    List<Assignment> findByClassInfoIdWithQuestions(@org.springframework.data.repository.query.Param("classId") Long classId);
 }

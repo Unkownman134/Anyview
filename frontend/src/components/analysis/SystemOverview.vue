@@ -147,11 +147,11 @@ const overviewStats = ref<any[]>([])
 const hotQuestions = ref<any[]>([])
 const activeUsers = ref<any[]>([])
 
-let userTrendChart: echarts.ECharts | null = null
-let submissionTrendChart: echarts.ECharts | null = null
-let hourDistributionChart: echarts.ECharts | null = null
-let dayOfWeekChart: echarts.ECharts | null = null
-let errorTypeChart: echarts.ECharts | null = null
+const userTrendChart = ref<echarts.ECharts | null>(null)
+const submissionTrendChart = ref<echarts.ECharts | null>(null)
+const hourDistributionChart = ref<echarts.ECharts | null>(null)
+const dayOfWeekChart = ref<echarts.ECharts | null>(null)
+const errorTypeChart = ref<echarts.ECharts | null>(null)
 
 const userTrendChartRef = ref<HTMLElement>()
 const submissionTrendChartRef = ref<HTMLElement>()
@@ -181,7 +181,7 @@ const updateOverviewStats = () => {
   if (!overview) return
 
   overviewStats.value = [
-    { title: '总用户数', value: overview.totalUsers, icon: markRaw(User), color: '#409EFF' },
+    { title: '总学生数', value: overview.totalUsers, icon: markRaw(User), color: '#409EFF' },
     { title: '总提交数', value: overview.totalSubmissions, icon: markRaw(Document), color: '#67C23A' },
     { title: '平均分数', value: overview.averageScore?.toFixed(1), icon: markRaw(Star), color: '#E6A23C' },
     { title: '通过率', value: overview.acceptanceRate?.toFixed(1) + '%', icon: markRaw(Check), color: '#F56C6C' }
@@ -206,7 +206,7 @@ const initCharts = () => {
 
 const initUserTrendChart = () => {
   if (!userTrendChartRef.value) return
-  userTrendChart = echarts.init(userTrendChartRef.value)
+  userTrendChart.value = echarts.init(userTrendChartRef.value)
 
   const trend = analysisData.value?.userTrend || []
   const option: any = {
@@ -230,12 +230,12 @@ const initUserTrendChart = () => {
       }
     ]
   }
-  userTrendChart.setOption(option)
+  userTrendChart.value?.setOption(option)
 }
 
 const initSubmissionTrendChart = () => {
   if (!submissionTrendChartRef.value) return
-  submissionTrendChart = echarts.init(submissionTrendChartRef.value)
+  submissionTrendChart.value = echarts.init(submissionTrendChartRef.value)
 
   const trend = analysisData.value?.submissionTrend || []
   const option: any = {
@@ -256,12 +256,12 @@ const initSubmissionTrendChart = () => {
       }
     ]
   }
-  submissionTrendChart.setOption(option)
+  submissionTrendChart.value?.setOption(option)
 }
 
 const initHourDistributionChart = () => {
   if (!hourDistributionChartRef.value) return
-  hourDistributionChart = echarts.init(hourDistributionChartRef.value)
+  hourDistributionChart.value = echarts.init(hourDistributionChartRef.value)
 
   const data = analysisData.value?.submissionsByHour || {}
   const option: any = {
@@ -274,12 +274,12 @@ const initHourDistributionChart = () => {
       itemStyle: { color: '#409EFF' }
     }]
   }
-  hourDistributionChart.setOption(option)
+  hourDistributionChart.value?.setOption(option)
 }
 
 const initDayOfWeekChart = () => {
   if (!dayOfWeekChartRef.value) return
-  dayOfWeekChart = echarts.init(dayOfWeekChartRef.value)
+  dayOfWeekChart.value = echarts.init(dayOfWeekChartRef.value)
 
   const data = analysisData.value?.submissionsByDayOfWeek || {}
   const option: any = {
@@ -292,12 +292,12 @@ const initDayOfWeekChart = () => {
       itemStyle: { color: '#67C23A' }
     }]
   }
-  dayOfWeekChart.setOption(option)
+  dayOfWeekChart.value?.setOption(option)
 }
 
 const initErrorTypeChart = () => {
   if (!errorTypeChartRef.value) return
-  errorTypeChart = echarts.init(errorTypeChartRef.value)
+  errorTypeChart.value = echarts.init(errorTypeChartRef.value)
 
   const data = analysisData.value?.errorTypeStats || []
   const option: any = {
@@ -315,7 +315,7 @@ const initErrorTypeChart = () => {
       }
     }]
   }
-  errorTypeChart.setOption(option)
+  errorTypeChart.value?.setOption(option)
 }
 
 const getDifficultyType = (difficulty: string) => {
@@ -333,11 +333,11 @@ const formatNumber = (num: number | string) => {
 }
 
 const handleResize = () => {
-  userTrendChart?.resize()
-  submissionTrendChart?.resize()
-  hourDistributionChart?.resize()
-  dayOfWeekChart?.resize()
-  errorTypeChart?.resize()
+  userTrendChart.value?.resize()
+  submissionTrendChart.value?.resize()
+  hourDistributionChart.value?.resize()
+  dayOfWeekChart.value?.resize()
+  errorTypeChart.value?.resize()
 }
 
 onMounted(() => {
@@ -347,11 +347,11 @@ onMounted(() => {
 
 onUnmounted(() => {
   window.removeEventListener('resize', handleResize)
-  userTrendChart?.dispose()
-  submissionTrendChart?.dispose()
-  hourDistributionChart?.dispose()
-  dayOfWeekChart?.dispose()
-  errorTypeChart?.dispose()
+  userTrendChart.value?.dispose()
+  submissionTrendChart.value?.dispose()
+  hourDistributionChart.value?.dispose()
+  dayOfWeekChart.value?.dispose()
+  errorTypeChart.value?.dispose()
 })
 </script>
 

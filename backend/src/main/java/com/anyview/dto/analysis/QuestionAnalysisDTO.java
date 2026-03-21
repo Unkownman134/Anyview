@@ -12,6 +12,9 @@ public class QuestionAnalysisDTO {
 
     private Long totalSubmissions;
     private Long acceptedSubmissions;
+    private Long failedSubmissions;
+    private Long uniqueAttemptUsers;
+    private Long uniqueSolvedUsers;
     private Double acceptanceRate;
     private Double averageScore;
 
@@ -19,6 +22,7 @@ public class QuestionAnalysisDTO {
     private List<SubmissionTrend> submissionTrend;
     private List<ErrorTypeStat> errorTypeStats;
     private List<CommonMistake> commonMistakes;
+    private List<Map<String, Object>> scoreDistribution;
 
     public static class SubmissionTrend {
         private String date;
@@ -157,6 +161,30 @@ public class QuestionAnalysisDTO {
         this.acceptedSubmissions = acceptedSubmissions;
     }
 
+    public Long getFailedSubmissions() {
+        return failedSubmissions;
+    }
+
+    public void setFailedSubmissions(Long failedSubmissions) {
+        this.failedSubmissions = failedSubmissions;
+    }
+
+    public Long getUniqueAttemptUsers() {
+        return uniqueAttemptUsers;
+    }
+
+    public void setUniqueAttemptUsers(Long uniqueAttemptUsers) {
+        this.uniqueAttemptUsers = uniqueAttemptUsers;
+    }
+
+    public Long getUniqueSolvedUsers() {
+        return uniqueSolvedUsers;
+    }
+
+    public void setUniqueSolvedUsers(Long uniqueSolvedUsers) {
+        this.uniqueSolvedUsers = uniqueSolvedUsers;
+    }
+
     public Double getAcceptanceRate() {
         return acceptanceRate;
     }
@@ -203,5 +231,13 @@ public class QuestionAnalysisDTO {
 
     public void setCommonMistakes(List<CommonMistake> commonMistakes) {
         this.commonMistakes = commonMistakes;
+    }
+
+    public List<Map<String, Object>> getScoreDistribution() {
+        return scoreDistribution;
+    }
+
+    public void setScoreDistribution(List<Map<String, Object>> scoreDistribution) {
+        this.scoreDistribution = scoreDistribution;
     }
 }

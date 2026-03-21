@@ -121,9 +121,9 @@ const searching = ref(false)
 const questionOptions = ref<any[]>([])
 const analysisData = ref<any>(null)
 
-let submissionTrendChart: echarts.ECharts | null = null
-let errorTypeChart: echarts.ECharts | null = null
-let scoreDistributionChart: echarts.ECharts | null = null
+const submissionTrendChart = ref<echarts.ECharts | null>(null)
+const errorTypeChart = ref<echarts.ECharts | null>(null)
+const scoreDistributionChart = ref<echarts.ECharts | null>(null)
 
 const submissionTrendChartRef = ref<HTMLElement>()
 const errorTypeChartRef = ref<HTMLElement>()
@@ -178,7 +178,7 @@ const initCharts = () => {
 
 const initSubmissionTrendChart = () => {
   if (!submissionTrendChartRef.value) return
-  submissionTrendChart = echarts.init(submissionTrendChartRef.value)
+  submissionTrendChart.value = echarts.init(submissionTrendChartRef.value)
 
   const trend = analysisData.value?.submissionTrend || []
   const option: any = {
@@ -202,12 +202,12 @@ const initSubmissionTrendChart = () => {
       }
     ]
   }
-  submissionTrendChart.setOption(option)
+  submissionTrendChart.value?.setOption(option)
 }
 
 const initErrorTypeChart = () => {
   if (!errorTypeChartRef.value) return
-  errorTypeChart = echarts.init(errorTypeChartRef.value)
+  errorTypeChart.value = echarts.init(errorTypeChartRef.value)
 
   const data = analysisData.value?.errorTypeDistribution || {}
   const option: any = {
@@ -225,12 +225,12 @@ const initErrorTypeChart = () => {
       }
     }]
   }
-  errorTypeChart.setOption(option)
+  errorTypeChart.value?.setOption(option)
 }
 
 const initScoreDistributionChart = () => {
   if (!scoreDistributionChartRef.value) return
-  scoreDistributionChart = echarts.init(scoreDistributionChartRef.value)
+  scoreDistributionChart.value = echarts.init(scoreDistributionChartRef.value)
 
   const data = analysisData.value?.scoreDistribution || []
   const option: any = {
@@ -255,7 +255,7 @@ const initScoreDistributionChart = () => {
       }
     }]
   }
-  scoreDistributionChart.setOption(option)
+  scoreDistributionChart.value?.setOption(option)
 }
 
 const getDifficultyType = (difficulty: string) => {
@@ -268,9 +268,9 @@ const getDifficultyType = (difficulty: string) => {
 }
 
 const handleResize = () => {
-  submissionTrendChart?.resize()
-  errorTypeChart?.resize()
-  scoreDistributionChart?.resize()
+  submissionTrendChart.value?.resize()
+  errorTypeChart.value?.resize()
+  scoreDistributionChart.value?.resize()
 }
 
 onMounted(() => {
@@ -279,9 +279,9 @@ onMounted(() => {
 
 onUnmounted(() => {
   window.removeEventListener('resize', handleResize)
-  submissionTrendChart?.dispose()
-  errorTypeChart?.dispose()
-  scoreDistributionChart?.dispose()
+  submissionTrendChart.value?.dispose()
+  errorTypeChart.value?.dispose()
+  scoreDistributionChart.value?.dispose()
 })
 </script>
 

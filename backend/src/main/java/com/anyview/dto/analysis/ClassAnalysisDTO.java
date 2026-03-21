@@ -15,11 +15,14 @@ public class ClassAnalysisDTO {
     private Long acceptedSubmissions;
     private Double acceptanceRate;
     private Double averageScore;
+    private Long totalAssignments;
 
     private List<StudentPerformance> studentPerformances;
     private List<SubmissionTrend> submissionTrend;
     private Map<String, Long> submissionsByDifficulty;
     private List<HotQuestion> hotQuestions;
+    private List<Map<String, Object>> scoreDistribution;
+    private List<AssignmentPerformance> assignmentPerformance;
 
     public static class StudentPerformance {
         private Long studentId;
@@ -245,6 +248,14 @@ public class ClassAnalysisDTO {
         this.averageScore = averageScore;
     }
 
+    public Long getTotalAssignments() {
+        return totalAssignments;
+    }
+
+    public void setTotalAssignments(Long totalAssignments) {
+        this.totalAssignments = totalAssignments;
+    }
+
     public List<StudentPerformance> getStudentPerformances() {
         return studentPerformances;
     }
@@ -275,5 +286,87 @@ public class ClassAnalysisDTO {
 
     public void setHotQuestions(List<HotQuestion> hotQuestions) {
         this.hotQuestions = hotQuestions;
+    }
+
+    public List<Map<String, Object>> getScoreDistribution() {
+        return scoreDistribution;
+    }
+
+    public void setScoreDistribution(List<Map<String, Object>> scoreDistribution) {
+        this.scoreDistribution = scoreDistribution;
+    }
+
+    public List<AssignmentPerformance> getAssignmentPerformance() {
+        return assignmentPerformance;
+    }
+
+    public void setAssignmentPerformance(List<AssignmentPerformance> assignmentPerformance) {
+        this.assignmentPerformance = assignmentPerformance;
+    }
+
+    public static class AssignmentPerformance {
+        private Long assignmentId;
+        private String assignmentName;
+        private Integer totalQuestions;
+        private Long submissionCount;
+        private Double averageScore;
+        private Double completionRate;
+        private String deadline;
+
+        public Long getAssignmentId() {
+            return assignmentId;
+        }
+
+        public void setAssignmentId(Long assignmentId) {
+            this.assignmentId = assignmentId;
+        }
+
+        public String getAssignmentName() {
+            return assignmentName;
+        }
+
+        public void setAssignmentName(String assignmentName) {
+            this.assignmentName = assignmentName;
+        }
+
+        public Integer getTotalQuestions() {
+            return totalQuestions;
+        }
+
+        public void setTotalQuestions(Integer totalQuestions) {
+            this.totalQuestions = totalQuestions;
+        }
+
+        public Long getSubmissionCount() {
+            return submissionCount;
+        }
+
+        public void setSubmissionCount(Long submissionCount) {
+            this.submissionCount = submissionCount;
+        }
+
+        public Double getAverageScore() {
+            return averageScore;
+        }
+
+        public void setAverageScore(Double averageScore) {
+            this.averageScore = averageScore;
+        }
+
+        public Double getCompletionRate() {
+            return completionRate;
+        }
+
+        public void setCompletionRate(Double completionRate) {
+            this.completionRate = completionRate;
+        }
+
+        public String getDeadline() {
+            return deadline;
+        }
+
+        public void setDeadline(String deadline) {
+            this.deadline = deadline;
+        }
     }
 }
