@@ -134,7 +134,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, nextTick, computed } from 'vue'
+import { ref, onMounted, onUnmounted, nextTick, computed, markRaw } from 'vue'
 import * as echarts from 'echarts'
 import { User, Document, Check, Star } from '@element-plus/icons-vue'
 import { getClassAnalysis } from '../../api/analysis'
@@ -151,10 +151,10 @@ const scoreDistributionChartRef = ref<HTMLElement>()
 const classStats = computed(() => {
   if (!analysisData.value) return []
   return [
-    { label: '总学生', value: analysisData.value.totalStudents, icon: User, color: '#409EFF' },
-    { label: '总提交', value: analysisData.value.totalSubmissions, icon: Document, color: '#67C23A' },
-    { label: '平均分', value: analysisData.value.averageScore?.toFixed(1), icon: Star, color: '#E6A23C' },
-    { label: '通过率', value: analysisData.value.passRate?.toFixed(1) + '%', icon: Check, color: '#F56C6C' }
+    { label: '总学生', value: analysisData.value.totalStudents, icon: markRaw(User), color: '#409EFF' },
+    { label: '总提交', value: analysisData.value.totalSubmissions, icon: markRaw(Document), color: '#67C23A' },
+    { label: '平均分', value: analysisData.value.averageScore?.toFixed(1), icon: markRaw(Star), color: '#E6A23C' },
+    { label: '通过率', value: analysisData.value.passRate?.toFixed(1) + '%', icon: markRaw(Check), color: '#F56C6C' }
   ]
 })
 

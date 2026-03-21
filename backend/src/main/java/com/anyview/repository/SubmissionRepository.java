@@ -32,8 +32,12 @@ public interface SubmissionRepository extends JpaRepository<Submission, Long> {
     List<Submission> findByAssignmentId(Long assignmentId);
     List<Submission> findByQuestionId(Long questionId);
     List<Submission> findByStudentIdAndAssignmentId(Long studentId, Long assignmentId);
+    List<Submission> findByCreatedAtAfter(LocalDateTime dateTime);
+    List<Submission> findByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
     long countByStatus(SubmissionStatus status);
     long countByCreatedAtAfter(LocalDateTime dateTime);
+    long countByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
+    long countByCreatedAtBetweenAndStatus(LocalDateTime start, LocalDateTime end, SubmissionStatus status);
     long countByQuestionId(Long questionId);
     long countByQuestionIdAndStatus(Long questionId, SubmissionStatus status);
     long countByStudentId(Long studentId);

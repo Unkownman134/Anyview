@@ -25,13 +25,13 @@
             <div class="card-header">
               <span>用户活跃度趋势</span>
               <el-radio-group v-model="timeRange" size="small" @change="loadData">
-                <el-radio-button label="7">7天</el-radio-button>
-                <el-radio-button label="30">30天</el-radio-button>
-                <el-radio-button label="90">90天</el-radio-button>
+                <el-radio-button value="7">7天</el-radio-button>
+                <el-radio-button value="30">30天</el-radio-button>
+                <el-radio-button value="90">90天</el-radio-button>
               </el-radio-group>
             </div>
           </template>
-          <div ref="userTrendChart" class="chart"></div>
+          <div ref="userTrendChartRef" class="chart"></div>
         </el-card>
       </el-col>
       <el-col :span="12">
@@ -41,7 +41,7 @@
               <span>提交量趋势</span>
             </div>
           </template>
-          <div ref="submissionTrendChart" class="chart"></div>
+          <div ref="submissionTrendChartRef" class="chart"></div>
         </el-card>
       </el-col>
     </el-row>
@@ -54,7 +54,7 @@
               <span>提交时段分布</span>
             </div>
           </template>
-          <div ref="hourDistributionChart" class="chart"></div>
+          <div ref="hourDistributionChartRef" class="chart"></div>
         </el-card>
       </el-col>
       <el-col :span="12">
@@ -64,7 +64,7 @@
               <span>提交星期分布</span>
             </div>
           </template>
-          <div ref="dayOfWeekChart" class="chart"></div>
+          <div ref="dayOfWeekChartRef" class="chart"></div>
         </el-card>
       </el-col>
     </el-row>
@@ -103,7 +103,7 @@
               <span>错误类型分布</span>
             </div>
           </template>
-          <div ref="errorTypeChart" class="chart"></div>
+          <div ref="errorTypeChartRef" class="chart"></div>
         </el-card>
       </el-col>
     </el-row>
@@ -135,7 +135,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, nextTick } from 'vue'
+import { ref, onMounted, onUnmounted, nextTick, markRaw } from 'vue'
 import * as echarts from 'echarts'
 import { User, Document, Check, Star } from '@element-plus/icons-vue'
 import { getSystemAnalysis } from '../../api/analysis'
@@ -181,10 +181,10 @@ const updateOverviewStats = () => {
   if (!overview) return
 
   overviewStats.value = [
-    { title: '总用户数', value: overview.totalUsers, icon: User, color: '#409EFF' },
-    { title: '总提交数', value: overview.totalSubmissions, icon: Document, color: '#67C23A' },
-    { title: '平均分数', value: overview.averageScore?.toFixed(1), icon: Star, color: '#E6A23C' },
-    { title: '通过率', value: overview.acceptanceRate?.toFixed(1) + '%', icon: Check, color: '#F56C6C' }
+    { title: '总用户数', value: overview.totalUsers, icon: markRaw(User), color: '#409EFF' },
+    { title: '总提交数', value: overview.totalSubmissions, icon: markRaw(Document), color: '#67C23A' },
+    { title: '平均分数', value: overview.averageScore?.toFixed(1), icon: markRaw(Star), color: '#E6A23C' },
+    { title: '通过率', value: overview.acceptanceRate?.toFixed(1) + '%', icon: markRaw(Check), color: '#F56C6C' }
   ]
 }
 

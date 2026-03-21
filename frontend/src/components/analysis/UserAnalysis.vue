@@ -59,9 +59,9 @@
               <div class="card-header">
                 <span>题目进度</span>
                 <el-radio-group v-model="progressFilter" size="small">
-                  <el-radio-button label="all">全部</el-radio-button>
-                  <el-radio-button label="solved">已解决</el-radio-button>
-                  <el-radio-button label="unsolved">未解决</el-radio-button>
+                  <el-radio-button value="all">全部</el-radio-button>
+                  <el-radio-button value="solved">已解决</el-radio-button>
+                  <el-radio-button value="unsolved">未解决</el-radio-button>
                 </el-radio-group>
               </div>
             </template>
