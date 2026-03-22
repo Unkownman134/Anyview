@@ -202,5 +202,13 @@ export default {
     deleteConfig: '删除配置',
     deleteConfirm: '确定要删除这个配置吗？',
     testConnection: '测试连接'
+  },
+  error: {
+    error: '错误',
+    defaultTitle: '发生错误',
+    defaultMessage: '抱歉，系统遇到了一些问题。请稍后再试或联系管理员。',
+    showDetails: '查看详情',
+    goBack: '返回',
+    goHome: '返回首页'
   }
 }

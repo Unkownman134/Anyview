@@ -202,5 +202,13 @@ export default {
     deleteConfig: 'Delete Config',
     deleteConfirm: 'Are you sure to delete this config?',
     testConnection: 'Test Connection'
+  },
+  error: {
+    error: 'Error',
+    defaultTitle: 'An Error Occurred',
+    defaultMessage: 'Sorry, the system encountered some issues. Please try again later or contact the administrator.',
+    showDetails: 'Show Details',
+    goBack: 'Go Back',
+    goHome: 'Go Home'
   }
 }

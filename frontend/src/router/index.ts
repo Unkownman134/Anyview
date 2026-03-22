@@ -20,6 +20,11 @@ const routes: RouteRecordRaw[] = [
     component: () => import('@/views/Register.vue')
   },
   {
+    path: '/error',
+    name: 'Error',
+    component: () => import('@/views/Error.vue')
+  },
+  {
     path: '/',
     component: () => import('@/views/Layout.vue'),
     redirect: '/dashboard',
